@@ -288,14 +288,14 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     else if(st < 14) it = ['🧥 Chaqueta de abrigo','👕 Manga larga'];
     else if(st < 18) it = ['🧶 Sudadera o chaqueta fina','👖 Pantalón largo'];
     else if(st < 23) it = ['👕 Manga larga ligera','🧶 Rebeca por si acaso'];
-    else it = ['👕 Manga corta','🩳 Pantalón corto','🧢 Gorra'];
+    else it = ['👕 Manga corta','👖 Pantalón corto o fino','🧢 Gorra'];
     var av = [];
     if(p >= 50) { it.push(abrigo ? '👢 Botas de agua' : '🧥 Chubasquero', '☂️ Paraguas'); if(!abrigo) it.push('👢 Botas de agua'); av.push(['', '☔ Probabilidad de lluvia del '+p+'%']); }
     else if(p >= 25) { it.push('☂️ Paraguas pequeño'); av.push(['', '🌦️ Posible lluvia ('+p+'%)']); }
     if(r >= 60) { av.push(['v','💨 Viento muy fuerte (rachas de '+Math.round(r)+' km/h): que lleve capucha y bien abrochado']); if(!abrigo) it.push('🧥 Cortavientos'); else if(st >= 5) it.push('🧢 Gorro o capucha'); }
     else if(r >= 40) { av.push(['v','💨 Viento (rachas de '+Math.round(r)+' km/h): da más frío del que marca']); if(!abrigo && st < 20) it.push('🧥 Cortavientos'); else if(abrigo && st >= 5) it.push('🧢 Gorro o capucha'); }
     if(uv >= 6 && st >= 18) { it.push('🧴 Crema solar'); av.push(['s','☀️ Sol fuerte (UV '+Math.round(uv)+')']); }
-    if(tar.length && man.length && max(tar,function(x){return x.t;}) - min(man,function(x){return x.s;}) >= 8) av.push(['s','🧅 Mucha diferencia entre la mañana y la tarde: mejor por capas']);
+    if(tar.length && man.length && max(tar,function(x){return x.t;}) - min(man,function(x){return x.s;}) >= 8) av.push(['s','🌡️ Mucha diferencia entre la mañana y la tarde: mejor por capas']);
     var mi = man.length ? Math.round(min(man,function(x){return x.s;})) : null, ta = tar.length ? Math.round(max(tar,function(x){return x.t;})) : null;
     var txt = (mi!==null ? 'Por la mañana, sensación de '+mi+'°' : '') + (ta!==null ? (mi!==null?'; a la salida del cole, ':'A la salida del cole, ')+ta+'°' : '') + '.';
     // quitar duplicados
