@@ -5,7 +5,7 @@ import { writeFile } from "node:fs/promises";
 
 const LAT = 41.44, LON = 2.19; // zona aproximada, nunca la dirección
 const ENTRADA = process.env.ENTRADA || "08:00", SALIDA = process.env.SALIDA || "16:30";
-const MODELOS = [process.env.GEMINI_MODEL || "gemini-2.5-flash", "gemini-flash-latest", "gemini-2.5-flash-lite"];
+const MODELOS = [process.env.GEMINI_MODEL || "gemini-flash-latest", "gemini-2.5-flash", "gemini-flash-lite-latest"];
 const log = (...a) => console.log("[tiempo]", ...a);
 const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid" }).format(new Date());
 const aMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + (m || 0); };
@@ -13,7 +13,7 @@ const aMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + (
 async function gemini(prompt) {
   const key = process.env.GEMINI_API_KEY; if (!key) throw new Error("Falta GEMINI_API_KEY");
   let err;
-  for (const modelo of MODELOS) for (let i = 1; i <= 2; i++) {
+  for (const modelo of MODELOS) for (let i = 1; i <= 3; i++) {
     try {
       const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
         method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": key },
