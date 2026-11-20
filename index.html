@@ -29,6 +29,9 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .aviso.err{background:#FBE4E4;color:#9B2C2C;margin:8px 0}
 .aviso-viejo{background:#FFF6DC}
 .estado.mal{color:#B23A3A}.estado.bien{color:#3F7A3A}
+.afp{display:inline-block;background:#E9E4DE;color:#3B3632;border-radius:8px;padding:0 6px 0 4px;margin-right:6px;font-weight:800}
+.afp .ic{margin-right:2px;width:1em;height:1em}
+.noche .afp{background:#3A322C;color:#F3EAE0}
 /* Detalle de evento */
 .ev[data-ev],.se[data-ev]{cursor:pointer}
 .evn{font-size:13.5px;font-weight:800;color:var(--soft);margin-top:3px}
@@ -311,6 +314,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     nino:'<circle cx="12" cy="7" r="3.5"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>',
     luna:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
     flecha:'<path d="M9 6l6 6-6 6"/>',
+    airfryer:'<rect x="5" y="3" width="14" height="18" rx="3.5"/><path d="M8 7h8M7.5 12h9v6h-9z M10.5 15h3"/>',
     nota:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/>',
     abrigo:'<path d="M8.5 3L12 6l3.5-3L20 7l-2 3.5V21H6V10.5L4 7z"/><path d="M12 6v15M9.5 14h0M14.5 14h0"/>',
     camiseta:'<path d="M8.5 3c.5 1.5 2 2.5 3.5 2.5S15 4.5 15.5 3L21 6.5 18.5 10 17 9v12H7V9l-1.5 1L3 6.5z"/>',
@@ -578,7 +582,8 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       var badge = r.gourmet ? ic('destello','b-g') : r.healthy ? ic('hoja','b-h') : r.peques ? ic('carita','b-p') : '';
       var th = '<span class="th"><span class="thi">'+imgOIlus(r, 160)+'</span>'+(badge ? '<span class="tb2">'+badge+'</span>' : '')+'</span>';
       var sub = [r.cocina, r.tiempo ? r.tiempo+' min' : ''].filter(function(x){return x;}).join(' · ');
-      return '<li>'+th+'<span>'+esc(r.titulo)+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'</span></li>';
+      var af = r.airfryer ? '<span class="afp">'+ic('airfryer')+'Air fryer</span>' : '';
+      return '<li>'+th+'<span>'+esc(r.titulo)+(sub||af?'<span class="sub">'+af+esc(sub)+'</span>':'')+'</span></li>';
     }).join('')+'</ul>';
     return s;
   }
