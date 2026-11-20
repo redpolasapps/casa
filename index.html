@@ -188,7 +188,8 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   /* ================== Configuración ================== */
   // Zona aproximada (barrio), nunca la dirección.
   var LAT = 41.44, LON = 2.19;
-  var CENAS = '/cenas/';               // la app de cenas (misma web)
+  var CENAS = '/cenas/';
+  var WORKER = 'https://calendarios.v-m-garciaortega.workers.dev'; // intermediario para leer calendarios (Cloudflare)               // la app de cenas (misma web)
   var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
   var DCORTO = ['dom','lun','mar','mié','jue','vie','sáb'];
   var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
@@ -487,11 +488,11 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 
   function cargaCalendarios(){
     var cals = CFG.calendarios || [];
-    if(!cals.length || !CFG.worker) { pinta(); return; }
+    if(!cals.length) { pinta(); return; }
     var hoy = new Date(), desde = new Date(hoy.getFullYear(), hoy.getMonth()-2, 1), hasta = new Date(hoy.getFullYear(), hoy.getMonth()+3, 0, 23, 59);
     var pend = cals.length, acc = [];
     cals.forEach(function(c){
-      var url = CFG.worker.replace(/\/+$/,'') + '/?url=' + encodeURIComponent(c.url.replace(/^webcal:\/\//i,'https://'));
+      var url = WORKER + '/?url=' + encodeURIComponent(c.url.replace(/^webcal:\/\//i,'https://'));
       xhr(url, function(t){
         try{ acc = acc.concat(parseICS(t, c, desde, hasta)); CALERR[c.url] = ''; }catch(e){ CALERR[c.url] = 'No se pudo leer'; }
         fin();
@@ -526,7 +527,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   }
   function fichaCal(){
     var s = '<div class="ftit">📅 Hoy</div><span class="mas">Ver mes ›</span>';
-    if(!(CFG.calendarios||[]).length || !CFG.worker) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">⚙️ Configurar calendarios</button></div>';
+    if(!(CFG.calendarios||[]).length) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">⚙️ Configurar calendarios</button></div>';
     var hoy = new Date(), ev = eventosDe(hoy);
     var ahora = Date.now();
     var vis = ev.filter(function(e){ return e.todo || +e.fin > ahora; });
@@ -591,8 +592,6 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
       '<div class="ayuda" style="margin-top:14px"><b>Google Calendar:</b> en la web de Google Calendar → ⚙️ Configuración → elige el calendario → copia la <b>"Dirección secreta en formato iCal"</b>.<br>'+
       '<b>iPhone / iPad (iCloud):</b> en la app Calendario → "Calendarios" → ⓘ junto al calendario → activa <b>"Calendario público"</b> y copia el enlace.<br>'+
       'Los enlaces se guardan <b>solo en este aparato</b>.</div></div>';
-    s += '<div class="form"><h3>🔌 Intermediario (Cloudflare Worker)</h3><label>Dirección del worker</label><input id="cWorker" placeholder="https://calendarios.tu-cuenta.workers.dev" value="'+esc(CFG.worker||'')+'" autocapitalize="off" autocorrect="off">'+
-      '<button class="boton" data-saveworker="1">Guardar</button></div>';
     s += '<div class="form"><h3>👦 Horario del cole</h3><div class="ayuda">Para el consejo de ropa: se mira el tiempo a la hora de ir y de volver.</div><div class="dos"><div><label>Entrada</label><input id="cEnt" type="time" value="'+esc(CFG.entrada)+'"></div><div><label>Salida</label><input id="cSal" type="time" value="'+esc(CFG.salida)+'"></div></div>'+
       '<button class="boton" data-savehoras="1">Guardar</button></div></div>';
     $('ovAjustes').innerHTML = s; $('ovAjustes').className = 'ov on';
@@ -637,7 +636,6 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
           NUEVO = { color: PALETA[CFG.calendarios.length % PALETA.length] }; abrirAjustes(); cargaCalendarios(); return;
         }
         if((a = t.getAttribute('data-delcal')) !== null){ CFG.calendarios.splice(+a,1); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
-        if(t.getAttribute('data-saveworker')){ CFG.worker = $('cWorker').value.replace(/^\s+|\s+$/g,''); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
         if(t.getAttribute('data-savehoras')){ CFG.entrada = $('cEnt').value || '08:00'; CFG.salida = $('cSal').value || '16:30'; guardaCfg(); abrirAjustes(); pinta(); return; }
       }
       t = t.parentNode;
