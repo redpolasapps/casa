@@ -86,11 +86,24 @@ if (w) {
 }
 if (!filas.length) throw new Error("No hay datos por horas para hoy");
 
-const ENFOQUE = TANDA === "manana"
+// ¿Hay cole hoy? Fin de semana no; y si el menú del cole dice que hoy no hay comedor (festivo), tampoco.
+const DOW = new Date(hoy + "T12:00:00Z").getUTCDay();
+let SIN_COLE = DOW === 0 || DOW === 6, MOTIVO = SIN_COLE ? "es fin de semana" : "";
+if (!SIN_COLE && process.env.GITHUB_REPOSITORY_OWNER) {
+  try {
+    const r = await fetch(`https://${process.env.GITHUB_REPOSITORY_OWNER}.github.io/cenas/menus/${hoy.slice(0, 7)}.json`, { signal: AbortSignal.timeout(15000) });
+    if (r.ok) { const m = await r.json(), d = m.dias && m.dias[hoy]; if (m.dias && Object.keys(m.dias).length && (!d || !(d.platos || []).length)) { SIN_COLE = true; MOTIVO = d && d.nota ? `es festivo (${d.nota})` : "no hay cole"; } }
+  } catch (e) { log("No he podido mirar el menú del cole: " + e.message); }
+}
+const ENFOQUE = SIN_COLE
+  ? (TANDA === "manana"
+    ? `HOY NO HAY COLE (${MOTIVO}). No hables del cole. Decide cómo vestir al niño para salir de casa hoy: un paseo o parque por la mañana (10-13 h) y otra salida por la tarde (16-19 h). Si cambia mucho entre la mañana y la tarde, dilo.`
+    : `HOY NO HAY COLE (${MOTIVO}). No hables del cole. Ahora es media tarde: el consejo es para salir a la calle o al parque esta tarde (16-19 h) y volver a casa cuando anochece. El resumen, sobre la tarde y la noche.`)
+  : TANDA === "manana"
   ? "Decide cómo vestir al niño para ir y volver del cole."
   : `Ahora es media tarde: el consejo es para IR A BUSCARLE al cole a las ${SALIDA} y el resto de la tarde (parque, vuelta a casa). Olvida la mañana. El resumen, sobre la tarde y la noche.`;
 
-const prompt = `Eres el asistente de una familia de ${CIUDAD}. Hoy es ${hoy}. Su hijo tiene ${EDAD} años y entra al cole entre las ${ENTRADA} y las ${ENTRADA_HASTA} (sale de casa un poco antes) y sale sobre las ${SALIDA}.
+const prompt = `Eres el asistente de una familia de ${CIUDAD}. Hoy es ${hoy}. Su hijo tiene ${EDAD} años${SIN_COLE ? ` y hoy no tiene cole (${MOTIVO})` : ` y entra al cole entre las ${ENTRADA} y las ${ENTRADA_HASTA} (sale de casa un poco antes) y sale sobre las ${SALIDA}`}.
 Previsión por horas de hoy (hora local):
 ${filas.join("\n")}
 Resumen: ${resumen}.
@@ -99,10 +112,10 @@ ${ENFOQUE} Ten en cuenta la SENSACIÓN TÉRMICA, la LLUVIA y el VIENTO (con rach
 Responde SOLO con JSON:
 {"resumen":"1 frase sobre cómo será el día (cielo, temperaturas, lluvia, viento)",
  "ropa":["4 a 6 prendas o accesorios en español sencillo, SIN emojis ni palabras en inglés, solo ropa de niño real, p. ej. 'Abrigo', 'Gorro', 'Paraguas', 'Zapatillas cerradas'"],
- "consejo":"1 frase práctica y cercana (p. ej. 'Por la mañana hace frío y viento: abrígale bien; a la salida podrá ir sin abrigo')"}`;
+ "consejo":"1 frase práctica y cercana (p. ej. ${SIN_COLE ? "'Mañana soleada para el parque; por la tarde refresca: llévale una chaqueta'" : "'Por la mañana hace frío y viento: abrígale bien; a la salida podrá ir sin abrigo'"})"}`;
 
 const g = await gemini(prompt);
 if (!g || !Array.isArray(g.ropa) || !g.resumen) throw new Error("Respuesta de Gemini no válida");
-const datos = { fecha: hoy, tanda: TANDA, generado: new Date().toISOString(), resumen: String(g.resumen), ropa: g.ropa.slice(0, 7).map((x) => String(x).replace(/^[^\p{L}0-9¿¡(]+/u, "").replace(/^[a-z_]+:?\s+(?=\p{Lu})/u, "").trim()).filter((x) => x && !/sart[eé]n|cacerola|olla/i.test(x)), consejo: String(g.consejo || "") };
+const datos = { fecha: hoy, tanda: TANDA, sinCole: SIN_COLE, generado: new Date().toISOString(), resumen: String(g.resumen), ropa: g.ropa.slice(0, 7).map((x) => String(x).replace(/^[^\p{L}0-9¿¡(]+/u, "").replace(/^[a-z_]+:?\s+(?=\p{Lu})/u, "").trim()).filter((x) => x && !/sart[eé]n|cacerola|olla/i.test(x)), consejo: String(g.consejo || "") };
 await writeFile(new URL("../tiempo.json", import.meta.url), JSON.stringify(datos, null, 1) + "\n");
 log("OK:", datos.resumen);

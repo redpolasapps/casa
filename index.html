@@ -421,8 +421,11 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   function aMin(t){ var p=String(t||'08:00').split(':'); return (+p[0])*60+(+p[1]||0); }
 
   // Consejo de ropa por reglas (si Gemini no ha escrito el suyo): sensación térmica, lluvia y VIENTO.
+  // Sin cole (fin de semana o festivo): las horas que importan son las de salir a la calle
+  function sinCole(){ var d = new Date().getDay(); return d === 0 || d === 6 || !!(CONSEJO && CONSEJO.fecha === kdia(new Date()) && CONSEJO.sinCole); }
+  function franjas(){ return sinCole() ? [[10*60, 13*60], [16*60, 19*60]] : [[ENT_INI-30, ENT_FIN], [SAL-30, SAL+60]]; }
   function ropaReglas(hs){
-    var man = franja(hs, ENT_INI-30, ENT_FIN), tar = franja(hs, SAL-30, SAL+60);
+    var fr = franjas(), man = franja(hs, fr[0][0], fr[0][1]), tar = franja(hs, fr[1][0], fr[1][1]);
     var todo = man.concat(tar); if(!todo.length) todo = hs;
     if(!todo.length) return null;
     var st = min(todo, function(x){return x.s;}), p = max(todo, function(x){return x.p;}), r = max(todo, function(x){return x.r;}), uv = max(hs, function(x){return x.uv;});
@@ -441,7 +444,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     if(uv >= 6 && st >= 18) { it.push('🧴 Crema solar'); av.push(['s','☀️ Sol fuerte (UV '+Math.round(uv)+')']); }
     if(tar.length && man.length && max(tar,function(x){return x.t;}) - min(man,function(x){return x.s;}) >= 8) av.push(['s','🌡️ Mucha diferencia entre la mañana y la tarde: mejor por capas']);
     var mi = man.length ? Math.round(min(man,function(x){return x.s;})) : null, ta = tar.length ? Math.round(max(tar,function(x){return x.t;})) : null;
-    var txt = (mi!==null ? 'Por la mañana, sensación de '+mi+'°' : '') + (ta!==null ? (mi!==null?'; a la salida del cole, ':'A la salida del cole, ')+ta+'°' : '') + '.';
+    var txt = (mi!==null ? 'Por la mañana, sensación de '+mi+'°' : '') + (ta!==null ? (mi!==null?(sinCole()?'; por la tarde, ':'; a la salida del cole, '):(sinCole()?'Por la tarde, ':'A la salida del cole, '))+ta+'°' : '') + '.';
     // quitar duplicados
     var vis = {}; it = it.filter(function(x){ if(vis[x]) return false; vis[x]=1; return true; });
     return { items:it, avisos:av, texto:txt };
@@ -475,7 +478,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       '<div class="tmm">↓ '+Math.round(d.temperature_2m_min[0])+'°  ↑ '+Math.round(d.temperature_2m_max[0])+'° · Sensación '+Math.round(cu.apparent_temperature)+'°</div></div></div>';
     s += '<div class="tdesc">'+esc(k.gemini && k.gemini.resumen ? k.gemini.resumen : resumenDia())+'</div>';
     var items = k.gemini && k.gemini.ropa && k.gemini.ropa.length ? k.gemini.ropa : (k.reglas ? k.reglas.items : []);
-    s += '<div class="ropa"><div class="rl">'+ic('nino')+(CONSEJO && CONSEJO.tanda==='tarde' ? 'Para ir a buscarle' : 'Para ir al cole')+'</div>'+ropaHTML(items)+
+    s += '<div class="ropa"><div class="rl">'+ic('nino')+(sinCole() ? (CONSEJO && CONSEJO.tanda==='tarde' ? 'Para salir esta tarde' : 'Para salir hoy (no hay cole)') : CONSEJO && CONSEJO.tanda==='tarde' ? 'Para ir a buscarle' : 'Para ir al cole')+'</div>'+ropaHTML(items)+
       (k.gemini && k.gemini.consejo ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.gemini.consejo)+'</div>' : (k.reglas ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.reglas.texto)+'</div>' : ''))+'</div>';
     if(k.reglas && k.reglas.avisos.length) s += '<div class="ravisos">'+k.reglas.avisos.map(avisoHTML).join('')+'</div>';
     s += viejo(WXT, 120, 'El tiempo está');
@@ -491,7 +494,8 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     function Y(t){ return top + ph - (t - tmin)/(tmax - tmin)*ph; }
     var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
     // franjas del cole
-    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=ENT_INI && m<=ENT_FIN) || (m>=SAL-30 && m<SAL+30)) s += '<rect class="banda" x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
+    var fr = sinCole() ? [[600,780],[960,1140]] : [[ENT_INI,ENT_FIN],[SAL-30,SAL+29]];
+    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=fr[0][0] && m<=fr[0][1]) || (m>=fr[1][0] && m<=fr[1][1])) s += '<rect class="banda" x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
     // lluvia (barras)
     hs.forEach(function(x,i){ var bh = x.p/100*(bot-30); if(bh>0) s += '<rect x="'+(X(i)-12)+'" y="'+(H-24-bh)+'" width="24" height="'+bh+'" rx="5" fill="#7FB3E3" opacity=".85"/>'+(x.p>=20?'<text x="'+X(i)+'" y="'+(H-28-bh)+'" font-size="11" font-weight="800" fill="#3E7CB1" text-anchor="middle">'+x.p+'%</text>':''); });
     // sensación térmica (discontinua) y temperatura (línea)
@@ -536,7 +540,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
         '<div class="hs">'+ic('gota')+x.p+'%</div><div class="hs">'+ic('viento')+Math.round(x.r)+'</div></div>';
     }).join('')+'</div>';
     s += '<h3 class="sec">Temperatura, lluvia y viento</h3><div class="grafica">'+graficaSVG(hs.filter(function(x){ return x.d.getHours()>=6; }))+'</div>'+
-      '<div class="leyg"><i style="background:#D9735A"></i>Temperatura<i style="background:#9AA5AE"></i>Sensación térmica<i style="background:#7FB3E3"></i>Probabilidad de lluvia<i style="background:#FFF6DC;border:1px solid #E8D9A8"></i>Horas del cole<i style="background:#B08ED6"></i>Fila de abajo: rachas de viento (km/h)</div>';
+      '<div class="leyg"><i style="background:#D9735A"></i>Temperatura<i style="background:#9AA5AE"></i>Sensación térmica<i style="background:#7FB3E3"></i>Probabilidad de lluvia<i style="background:#FFF6DC;border:1px solid #E8D9A8"></i>'+(sinCole()?'Horas de salir a la calle':'Horas del cole')+'<i style="background:#B08ED6"></i>Fila de abajo: rachas de viento (km/h)</div>';
     // Mañana
     if(d.time[1]){ var c2 = wcod(d.weather_code[1]); s += '<h3 class="sec">Mañana, '+DIAS[fechaLocal(d.time[1]).getDay()]+'</h3><div class="dtxt">'+c2[0]+' '+esc(c2[1])+'. Entre '+Math.round(d.temperature_2m_min[1])+'° y '+Math.round(d.temperature_2m_max[1])+'°, lluvia '+d.precipitation_probability_max[1]+'%, rachas de '+Math.round(d.wind_gusts_10m_max[1])+' km/h.</div>'; }
     s += '<div class="leyg" style="margin-top:14px">Datos: Open-Meteo'+(k.gemini?' · Consejo de ropa: Gemini':'')+'</div></div>';
