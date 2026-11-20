@@ -23,6 +23,7 @@ jobs:
       - name: Pedir el consejo a Gemini
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          NODE_OPTIONS: --dns-result-order=ipv4first
         run: node scripts/tiempo.mjs
       - name: Publicar
         env:

@@ -30,7 +30,15 @@ async function gemini(prompt) {
 }
 
 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max,uv_index_max&timezone=Europe%2FMadrid&forecast_days=1`;
-const w = await (await fetch(url)).json();
+async function bajar(u) {
+  for (let i = 1; i <= 4; i++) {
+    try { const r = await fetch(u, { signal: AbortSignal.timeout(20000) }); if (r.ok) return await r.json(); log("Open-Meteo HTTP", r.status); }
+    catch (e) { log(`Open-Meteo intento ${i}:`, e.cause?.code || e.message); }
+    await new Promise((r) => setTimeout(r, 5000 * i));
+  }
+  throw new Error("No se pudo descargar el tiempo de Open-Meteo");
+}
+const w = await bajar(url);
 const H = w.hourly, filas = [];
 for (let i = 0; i < H.time.length; i++) {
   const hh = Number(H.time[i].slice(11, 13));
