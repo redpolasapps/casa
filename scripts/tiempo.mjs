@@ -1,10 +1,10 @@
 // Cada mañana: descarga la previsión (Open-Meteo, zona aproximada del barrio) y le pide a Gemini
 // un consejo de ropa para un niño de 4 años (ir al cole y volver) y un resumen del día. Escribe tiempo.json.
-// Sin dependencias: Node 20+.  Variables: GEMINI_API_KEY (obligatoria), ENTRADA / SALIDA (opcional, "08:00" / "16:30").
+// Sin dependencias: Node 20+.  Variables: GEMINI_API_KEY (obligatoria), ENTRADA / SALIDA (opcional, "08:00" / "17:00").
 import { writeFile } from "node:fs/promises";
 
 const LAT = 41.44, LON = 2.19; // zona aproximada, nunca la dirección
-const ENTRADA = process.env.ENTRADA || "08:00", SALIDA = process.env.SALIDA || "16:30";
+const ENTRADA = process.env.ENTRADA || "08:00", SALIDA = process.env.SALIDA || "17:00";
 const MODELOS = [process.env.GEMINI_MODEL || "gemini-flash-latest", "gemini-2.5-flash", "gemini-flash-lite-latest"];
 const log = (...a) => console.log("[tiempo]", ...a);
 const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid" }).format(new Date());
@@ -70,7 +70,7 @@ if (w) {
 }
 if (!filas.length) throw new Error("No hay datos por horas para hoy");
 
-const prompt = `Eres el asistente de una familia de Barcelona. Hoy es ${hoy}. Su hijo tiene 4 años y entra al cole sobre las ${ENTRADA} (sale de casa un poco antes) y sale sobre las ${SALIDA}.
+const prompt = `Eres el asistente de una familia de Barcelona. Hoy es ${hoy}. Su hijo tiene 4 años y entra al cole entre las 8:00 y las 9:00 (sale de casa un poco antes) y sale sobre las ${SALIDA}.
 Previsión por horas de hoy (hora local):
 ${filas.join("\n")}
 Resumen: ${resumen}.

@@ -353,7 +353,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   // Safari antiguo interpreta mal "2026-11-20T08:00": lo parseamos a mano como hora local.
   function fechaLocal(s){ var m = String(s).match(/(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/); return new Date(+m[1], +m[2]-1, +m[3], m[4]?+m[4]:0, m[5]?+m[5]:0); }
 
-  var CFG = lget('panel_cfg', { worker:'', calendarios:[], entrada:'08:00', salida:'16:30' });
+  var CFG = lget('panel_cfg', { worker:'', calendarios:[] });
 
   /* ================== TIEMPO ================== */
   var WX = null, CONSEJO = null, WXT = null;
@@ -387,12 +387,13 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   function franja(hs, desde, hasta){ return hs.filter(function(x){ var m=x.d.getHours()*60+x.d.getMinutes(); return m>=desde && m<=hasta; }); }
   function min(a,f){ var m=null; a.forEach(function(x){ var v=f(x); if(m===null||v<m) m=v; }); return m; }
   function max(a,f){ var m=null; a.forEach(function(x){ var v=f(x); if(m===null||v>m) m=v; }); return m; }
+  // Horario del cole (fijo): entrada de 8:00 a 9:00, salida a las 17:00
+  var ENT_INI = 8*60, ENT_FIN = 9*60, SAL = 17*60;
   function aMin(t){ var p=String(t||'08:00').split(':'); return (+p[0])*60+(+p[1]||0); }
 
   // Consejo de ropa por reglas (si Gemini no ha escrito el suyo): sensación térmica, lluvia y VIENTO.
   function ropaReglas(hs){
-    var e = aMin(CFG.entrada), s = aMin(CFG.salida);
-    var man = franja(hs, e-60, e+60), tar = franja(hs, s-30, s+90);
+    var man = franja(hs, ENT_INI-30, ENT_FIN), tar = franja(hs, SAL-30, SAL+60);
     var todo = man.concat(tar); if(!todo.length) todo = hs;
     if(!todo.length) return null;
     var st = min(todo, function(x){return x.s;}), p = max(todo, function(x){return x.p;}), r = max(todo, function(x){return x.r;}), uv = max(hs, function(x){return x.uv;});
@@ -461,8 +462,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     function Y(t){ return top + ph - (t - tmin)/(tmax - tmin)*ph; }
     var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
     // franjas del cole
-    var e = aMin(CFG.entrada), sa = aMin(CFG.salida);
-    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=e-60 && m<=e+30) || (m>=sa-30 && m<=sa+60)) s += '<rect class="banda" x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
+    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=ENT_INI && m<=ENT_FIN) || m===SAL) s += '<rect class="banda" x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
     // lluvia (barras)
     hs.forEach(function(x,i){ var bh = x.p/100*(bot-30); if(bh>0) s += '<rect x="'+(X(i)-12)+'" y="'+(H-24-bh)+'" width="24" height="'+bh+'" rx="5" fill="#7FB3E3" opacity=".85"/>'+(x.p>=20?'<text x="'+X(i)+'" y="'+(H-28-bh)+'" font-size="11" font-weight="800" fill="#3E7CB1" text-anchor="middle">'+x.p+'%</text>':''); });
     // sensación térmica (discontinua) y temperatura (línea)
@@ -787,8 +787,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NUEVO.color===p?'on':'')+'" data-color="'+p+'"></button>'; }).join('')+'</div></div>'+
       '<div class="paso2"><div class="pt2">3 · Pulsa añadir</div><button class="boton" data-addcal="1">'+ic('mas')+'Añadir calendario</button>'+
       '<div class="ayuda" style="margin-top:8px">En unos segundos verás arriba <b>"Leído"</b> en verde y sus eventos aparecerán en el panel, con su color. Se actualizan solos cada 15 minutos.</div></div></div></div>';
-    s += '<div class="form"><h3>'+ic('nino')+'Horario del cole</h3><div class="ayuda">Para el consejo de ropa: se mira el tiempo a la hora de ir y de volver.</div><div class="dos"><div><label>Entrada</label><input id="cEnt" type="time" value="'+esc(CFG.entrada)+'"></div><div><label>Salida</label><input id="cSal" type="time" value="'+esc(CFG.salida)+'"></div></div>'+
-      '<button class="boton" data-savehoras="1">Guardar</button></div>'+
+    s += ''+
       '<div class="form"><h3>'+ic('luna')+'Modo noche</h3><div class="ayuda">Por la noche el panel se oscurece para que moleste menos. En automático, cambia al atardecer y vuelve a la claridad al amanecer.</div>'+
       '<div class="seg" style="margin-top:10px">'+[['auto','Automático'],['claro','Siempre claro'],['oscuro','Siempre oscuro']].map(function(o){ return '<button class="'+((CFG.modo||'auto')===o[0]?'on':'')+'" data-modo="'+o[0]+'">'+o[1]+'</button>'; }).join('')+'</div></div></div>';
     $('ovAjustes').innerHTML = s; $('ovAjustes').className = 'ov on';
@@ -841,7 +840,6 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
         }
         if((a = t.getAttribute('data-delcal')) !== null){ CFG.calendarios.splice(+a,1); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
         if((a = t.getAttribute('data-modo'))){ CFG.modo = a; guardaCfg(); pinta(); abrirAjustes(); return; }
-        if(t.getAttribute('data-savehoras')){ CFG.entrada = $('cEnt').value || '08:00'; CFG.salida = $('cSal').value || '16:30'; guardaCfg(); abrirAjustes(); pinta(); return; }
       }
       t = t.parentNode;
     }
