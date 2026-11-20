@@ -14,6 +14,18 @@ const log = (...a) => console.log("[tiempo]", ...a);
 const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: ZONA }).format(new Date());
 const aMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + (m || 0); };
 
+// Dos tandas al día, a las horas de config.js ("actualizar"): mañana (con las cenas) y tarde (antes de ir a buscarle).
+// GitHub lanza esto cada media hora; solo trabaja si toca y esa tanda no está hecha hoy.
+const HORAS = (CFG.actualizar && CFG.actualizar.length ? CFG.actualizar : ["05:40", "15:40"]).map(aMin);
+const AHORA = aMin(new Intl.DateTimeFormat("en-GB", { timeZone: ZONA, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date()));
+const TANDA = AHORA >= (HORAS[1] ?? 720) - 10 ? "tarde" : "manana";
+if (process.env.PROGRAMADO === "1") {
+  const desde = TANDA === "tarde" ? HORAS[1] : HORAS[0];
+  const ok = AHORA >= desde - 10 && AHORA < desde + 180;
+  let previo = null; try { previo = JSON.parse(await readFile(new URL("../tiempo.json", import.meta.url), "utf8")); } catch {}
+  if (!ok || (previo && previo.fecha === hoy && previo.tanda === TANDA)) { log(`Nada que hacer (tanda ${TANDA}: ${ok ? "ya hecha" : "aún no toca"})`); process.exit(0); }
+}
+
 async function gemini(prompt) {
   const key = process.env.GEMINI_API_KEY; if (!key) throw new Error("Falta GEMINI_API_KEY");
   let err;
@@ -74,14 +86,6 @@ if (w) {
 }
 if (!filas.length) throw new Error("No hay datos por horas para hoy");
 
-// Dos tandas al día: por la mañana (con las cenas) y a media tarde (antes de ir a buscar al peque).
-const HORA = Number(horaMadrid(new Date().toISOString()).slice(0, 2));
-const TANDA = HORA < 12 ? "manana" : "tarde";
-if (process.env.PROGRAMADO === "1") {
-  const ok = TANDA === "manana" ? HORA >= 5 && HORA <= 8 : HORA >= 15 && HORA <= 16;
-  let previo = null; try { previo = JSON.parse(await readFile(new URL("../tiempo.json", import.meta.url), "utf8")); } catch {}
-  if (!ok || (previo && previo.fecha === hoy && previo.tanda === TANDA)) { log(`Nada que hacer (${HORA} h, tanda ${TANDA} ${ok ? "ya hecha" : "fuera de hora"})`); process.exit(0); }
-}
 const ENFOQUE = TANDA === "manana"
   ? "Decide cómo vestir al niño para ir y volver del cole."
   : `Ahora es media tarde: el consejo es para IR A BUSCARLE al cole a las ${SALIDA} y el resto de la tarde (parque, vuelta a casa). Olvida la mañana. El resumen, sobre la tarde y la noche.`;

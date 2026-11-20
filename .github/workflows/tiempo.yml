@@ -2,10 +2,8 @@ name: Consejo del tiempo (Gemini)
 
 on:
   schedule:
-    # Mañana ~5:40 (con las cenas) y tarde ~15:40 (antes de ir a buscar al peque), hora de Madrid.
-    # Va dos veces (invierno/verano); el script solo trabaja una vez por tanda.
-    - cron: "40 3,4 * * *"
-    - cron: "40 13,14 * * *"
+    # Cada media hora. El script solo trabaja a las horas de config.js ("actualizar") y una vez por tanda.
+    - cron: "10,40 * * * *"
   workflow_dispatch:
 
 permissions:

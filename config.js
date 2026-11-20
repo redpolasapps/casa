@@ -11,5 +11,6 @@ window.CONFIG = {
   entrada: "08:00",             // el cole empieza a entrar...
   entradaHasta: "09:00",        // ...hasta esta hora
   salida: "17:00",              // hora de ir a buscarle
+  actualizar: ["05:40", "15:40"], // horas del consejo del tiempo: [mañana, tarde] (hora de aquí)
   worker: "https://calendarios.v-m-garciaortega.workers.dev"  // intermediario de Cloudflare para leer los calendarios
 };
