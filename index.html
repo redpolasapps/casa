@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Casa">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#FBF6EE;--card:#fff;--ink:#2E2A26;--soft:#7A6F64;--line:#EDE4D6;--terra:#D9735A;--terra-d:#B85A43;--crema:#F5EBDD;--azul:#3E7CB1;--verde:#5E9452}
+:root{--bg:#FBF6EE;--card:#fff;--ink:#2E2A26;--soft:#675D53;--line:#EDE4D6;--terra:#D9735A;--terra-d:#B85A43;--crema:#F5EBDD;--azul:#3E7CB1;--verde:#5E9452}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Nunito",-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
 h1,h2,h3{font-family:"Fraunces",Georgia,serif;margin:0;font-weight:700}
@@ -17,6 +17,18 @@ button,input,select{font-family:inherit}
 button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .wrap{max-width:1180px;margin:0 auto;padding:20px 24px 30px}
 
+/* Iconos */
+.ic{width:1.15em;height:1.15em;vertical-align:-.2em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;margin-right:.35em;-webkit-flex:none;flex:none}
+.wi{width:1em;height:1em;display:inline-block;vertical-align:-.12em}
+.cta .fl{margin:0 0 0 .3em;stroke-width:2.6}
+.bbig .ic,.ajustes .ic{margin:0}
+.ajustes{color:var(--ink);font-size:24px}
+.b-g{color:#8E5BB5}.b-h{color:#3F7A3A}.b-p{color:#C77A12}
+.th .tb2 .ic{margin:0;width:14px;height:14px;vertical-align:-2px}
+.actu{font-size:14px;font-weight:800;color:var(--soft);margin-top:10px}
+.aviso.err{background:#FBE4E4;color:#9B2C2C;margin:8px 0}
+.aviso-viejo{background:#FFF6DC}
+.estado.mal{color:#B23A3A}.estado.bien{color:#3F7A3A}
 /* Cabecera: hora grande */
 .cab{display:-webkit-flex;display:flex;-webkit-align-items:flex-end;align-items:flex-end;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:20px}
 .hora{font-family:"Fraunces",Georgia,serif;font-size:110px;line-height:.9;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
@@ -28,12 +40,12 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 /* Fichas */
 .fichas{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin:0 -9px}
 .ficha{width:33.333%;padding:0 9px 18px}
-.fin{background:#fff;border-radius:26px;box-shadow:0 2px 0 var(--line),0 10px 30px rgba(80,50,20,.07);padding:20px 20px 18px;height:100%;min-height:440px;cursor:pointer;position:relative;overflow:hidden}
+.fin{cursor:pointer;background:#fff;border-radius:26px;box-shadow:0 2px 0 var(--line),0 10px 30px rgba(80,50,20,.07);padding:20px 20px 18px;height:100%;min-height:440px;cursor:pointer;position:relative;overflow:hidden}
 .fin:active{-webkit-transform:scale(.99);transform:scale(.99)}
-.ftit{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--soft);margin-bottom:10px}
+.ftit{font-size:14px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--soft);margin-bottom:10px}
 .fin{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column}
 .fbody{-webkit-flex:1;flex:1}
-.cta{margin-top:14px;background:var(--ink);color:#fff;border-radius:16px;padding:15px 16px;font-weight:800;font-size:17px;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.cta{margin-top:14px;background:var(--ink);color:#fff;border-radius:16px;padding:15px 16px;font-weight:800;font-size:17px;text-align:center;white-space:nowrap;box-shadow:0 3px 0 rgba(0,0,0,.15)}
 .tw .cta{background:#2E5E8C}
 .cn .cta{background:var(--terra)}
 .ca .cta{background:#3F7A3A}
@@ -44,26 +56,26 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .tnow{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
 .ticon{font-size:64px;line-height:1;margin-right:12px}
 .ttemp{font-family:"Fraunces",Georgia,serif;font-size:58px;font-weight:700;line-height:1}
-.tmm{font-size:15px;color:var(--soft);font-weight:800;margin-top:4px}
+.tmm{font-size:16px;color:var(--soft);font-weight:800;margin-top:4px}
 .tdesc{font-size:16px;font-weight:700;margin:10px 0 12px;line-height:1.35}
 .ropa{background:#FFF6DC;border-radius:18px;padding:12px 14px;margin-top:6px}
-.ropa .rl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#8A6400;margin-bottom:6px}
-.rit{display:inline-block;background:#fff;border-radius:14px;padding:5px 10px;margin:0 6px 6px 0;font-weight:800;font-size:14px}
+.ropa .rl{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#8A6400;margin-bottom:6px}
+.rit{display:inline-block;background:#fff;border-radius:14px;padding:6px 11px;margin:0 6px 6px 0;font-weight:800;font-size:15px}
 .ravisos{margin-top:8px}
-.aviso{display:block;background:#E3EEF9;color:#245A86;border-radius:12px;padding:7px 10px;font-weight:800;font-size:14px;margin-top:6px}
+.aviso{display:block;background:#E3EEF9;color:#1F4E77;border-radius:12px;padding:8px 11px;font-weight:800;font-size:15px;margin-top:6px}
 .aviso.v{background:#ECE6F7;color:#56398A}
 .aviso.s{background:#FDEBD3;color:#8A4B00}
 
 /* Ficha cenas */
 .cn{background:linear-gradient(160deg,#FCE6DC,#fff 55%)}
 .cole{font-size:14.5px;line-height:1.4;background:var(--crema);border-radius:14px;padding:10px 12px;margin-bottom:12px}
-.cole b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--terra-d)}
+.cole b{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:var(--terra-d)}
 .cl{list-style:none;margin:0;padding:0}
 .cl li{padding:7px 0;border-bottom:1px solid var(--line);font-weight:800;font-size:15px;line-height:1.25;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
 .th{width:54px;height:54px;border-radius:14px;-webkit-flex:none;flex:none;margin-right:12px;background:#F5EBDD center/cover no-repeat;overflow:hidden;position:relative;box-shadow:0 2px 6px rgba(80,50,20,.12)}
 .th svg{width:54px;height:54px;display:block}
 .th .tb2{position:absolute;right:-2px;bottom:-2px;background:#fff;border-radius:10px;font-size:12px;line-height:20px;width:22px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.15)}
-.cl .sub{display:block;font-size:12px;font-weight:700;color:var(--soft);margin-top:2px}
+.cl .sub{display:block;font-size:13.5px;font-weight:700;color:var(--soft);margin-top:2px}
 .mosaico{display:-webkit-flex;display:flex;height:92px;border-radius:18px;overflow:hidden;margin:-4px 0 12px}
 .mosaico div{-webkit-flex:1;flex:1;background:#F5EBDD center/cover no-repeat;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center}
 .mosaico div + div{margin-left:3px}
@@ -78,12 +90,12 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .ev{display:-webkit-flex;display:flex;-webkit-align-items:stretch;align-items:stretch;margin-bottom:8px;background:#fff;border-radius:14px;box-shadow:0 1px 0 var(--line);overflow:hidden}
 .ev .bar{width:7px;-webkit-flex:none;flex:none}
 .ev .evb{padding:8px 12px;min-width:0}
-.ev .evh{font-size:13px;font-weight:800;color:var(--soft)}
+.ev .evh{font-size:14px;font-weight:800;color:var(--soft)}
 .ev .evt{font-size:16px;font-weight:800;line-height:1.25;overflow:hidden;text-overflow:ellipsis}
-.ev .evl{font-size:12.5px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ev .evl{font-size:14px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .vacio{color:var(--soft);font-size:16px;line-height:1.5;padding:18px 4px;text-align:center}
 .boton{display:inline-block;background:var(--terra);color:#fff;font-weight:800;font-size:16px;padding:12px 18px;border-radius:14px;margin-top:8px}
-.manana{font-size:13.5px;color:var(--soft);font-weight:800;margin-top:10px}
+.manana{font-size:15px;color:var(--soft);font-weight:800;margin-top:10px}
 
 /* Superposiciones */
 .ov{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:20;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -104,7 +116,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .tb .n{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--soft)}
 .tb .i{font-size:40px;margin:6px 0}
 .tb .t{font-family:"Fraunces",Georgia,serif;font-size:26px;font-weight:700}
-.tb .x{font-size:13.5px;color:var(--soft);font-weight:700;margin-top:4px}
+.tb .x{font-size:14.5px;color:var(--soft);font-weight:700;margin-top:4px}
 .grafica{background:#fff;border-radius:22px;padding:14px 10px 10px;box-shadow:0 2px 0 var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:6px}
 .grafica svg{display:block}
 .horas{white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 0 6px}
@@ -113,8 +125,8 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .hc .hh{font-size:14px;font-weight:800;opacity:.8}
 .hc .hi{font-size:30px;margin:4px 0}
 .hc .ht{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:700}
-.hc .hs{font-size:11.5px;font-weight:800;margin-top:3px;opacity:.85}
-.leyg{font-size:13px;color:var(--soft);font-weight:700;margin:6px 4px}
+.hc .hs{font-size:13px;font-weight:800;margin-top:3px;opacity:.85}
+.leyg{font-size:14px;color:var(--soft);font-weight:700;margin:6px 4px}
 .leyg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 5px 0 12px;vertical-align:-1px}
 .sec{font-size:21px;margin:22px 0 10px}
 .dtxt{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:0 2px 0 var(--line);font-size:17px;line-height:1.5}
@@ -131,17 +143,17 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .mes{background:#fff;border-radius:22px;padding:8px;box-shadow:0 2px 0 var(--line)}
 .mrow{display:-webkit-flex;display:flex}
 .mrow>div{-webkit-flex:1 1 0;flex:1 1 0;min-width:0;margin:3px}
-.mhd>div{text-align:center;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--terra-d);padding:6px 0}
+.mhd>div{text-align:center;font-size:13.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--terra-d);padding:6px 0}
 .md{background:var(--bg);border-radius:12px;min-height:96px;padding:6px;cursor:pointer}
 .md.fuera{opacity:.35}
 .md.hoy{background:#FCE6DC;box-shadow:inset 0 0 0 3px var(--terra)}
 .md.sel{box-shadow:inset 0 0 0 3px var(--azul)}
 .md .dn{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:17px;margin-bottom:3px}
-.chip{display:block;font-size:11.5px;font-weight:800;color:#fff;border-radius:6px;padding:2px 5px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{display:block;font-size:13px;font-weight:800;color:#fff;border-radius:6px;padding:2px 5px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .chip.mob{display:none}
 .chip.d{background:none;color:var(--ink);padding-left:0}
 .chip.d i{display:inline-block;width:8px;height:8px;border-radius:4px;margin-right:4px;vertical-align:0}
-.masn{font-size:11.5px;font-weight:800;color:var(--soft)}
+.masn{font-size:13px;font-weight:800;color:var(--soft)}
 .dia{margin-top:16px}
 .sem{display:-webkit-flex;display:flex;margin:0 -4px}
 .sc{-webkit-flex:1 1 0;flex:1 1 0;min-width:0;margin:0 4px;background:#fff;border-radius:18px;padding:10px 8px;box-shadow:0 2px 0 var(--line);min-height:380px}
@@ -150,8 +162,8 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .sc .sh b{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--terra-d)}
 .sc .sh span{font-family:"Fraunces",Georgia,serif;font-size:26px;font-weight:700}
 .se{border-radius:10px;padding:6px 7px;margin-bottom:6px;color:#fff}
-.se .h{font-size:11.5px;font-weight:800;opacity:.9}
-.se .t{font-size:13.5px;font-weight:800;line-height:1.2}
+.se .h{font-size:13px;font-weight:800;opacity:.9}
+.se .t{font-size:14.5px;font-weight:800;line-height:1.2}
 .leyc{margin:12px 2px 0}
 .leyc span{display:inline-block;font-weight:800;font-size:14px;margin:0 14px 6px 0}
 .leyc i{display:inline-block;width:12px;height:12px;border-radius:6px;margin-right:6px;vertical-align:-1px}
@@ -163,7 +175,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .crow{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
 .crow .cc{width:22px;height:22px;border-radius:11px;margin-right:12px;-webkit-flex:none;flex:none}
 .crow .cn2{-webkit-flex:1;flex:1;font-weight:800;min-width:0}
-.crow .cu{font-size:12px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.crow .cu{font-size:13px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
 .crow .del{color:#B23A3A;font-weight:800;padding:8px 10px}
 .colores button{width:40px;height:40px;border-radius:20px;margin:0 8px 8px 0;border:3px solid transparent}
 .colores button.on{border-color:var(--ink)}
@@ -181,6 +193,24 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .estado{font-size:13px;font-weight:800;margin-top:6px}
 .dos{display:-webkit-flex;display:flex;margin:0 -6px}.dos>div{-webkit-flex:1;flex:1;margin:0 6px}
 
+/* ===== Modo noche ===== */
+body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#33291F;--terra-d:#F0A48C;background:#191512}
+.noche .fin,.noche .ev,.noche .form,.noche .tb,.noche .hc,.noche .grafica,.noche .mes,.noche .sc,.noche .dtxt,.noche .bbig,.noche .nb,.noche .seg,.noche .ajustes,.noche .rit,.noche .op,.noche .md,.noche .form input,.noche .form select,.noche .tdia{background:#26201B;color:var(--ink);border-color:#3A312A}
+.noche .fin{box-shadow:0 2px 0 #0E0B09,0 10px 30px rgba(0,0,0,.35)}
+.noche .tw{background:linear-gradient(160deg,#1D2A36,#26201B 55%)}
+.noche .cn{background:linear-gradient(160deg,#36241D,#26201B 55%)}
+.noche .ca{background:linear-gradient(160deg,#1F2B1D,#26201B 55%)}
+.noche .thero{background:linear-gradient(160deg,#1D2A36,#26201B)}
+.noche .ropa{background:#33291A}.noche .ropa .rl{color:#F1D58A}
+.noche .cole{background:#33291F}
+.noche .aviso{background:#1E3042;color:#A9CDEE}.noche .aviso.v{background:#2E2440;color:#CDB6EE}.noche .aviso.s{background:#3A2A16;color:#F2C38A}.noche .aviso.err{background:#3E1F1F;color:#F2AFAF}
+.noche .priv{background:#1F2B1D;color:#B9DDB0}.noche .priv b{color:#D6F0CF}
+.noche .ovb{background:rgba(25,21,18,.96)}
+.noche .hc.ahora{background:#3C6E9C}
+.noche .md.hoy{background:#3A261E}
+.noche .grafica{color:var(--ink)}.noche .grafica .banda{fill:#33291A}
+.noche .cta{box-shadow:none}
+.noche .wi path[fill="#fff"],.noche .wi path[fill="#F1F4F7"]{fill:#DDE3E8}
 @media (max-width:900px){
   .ficha{width:100%}
   .fin{min-height:0}
@@ -206,7 +236,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 <div class="ov" id="ovTiempo"></div>
 <div class="ov" id="ovCal"></div>
 <div class="ov" id="ovAjustes"></div>
-<div class="ov" id="ovCenas"><div class="ovb"><button class="bbig" data-cerrar="ovCenas">‹ Panel</button><h2>🍽️ Cenas</h2><span style="width:110px"></span></div></div>
+<div class="ov" id="ovCenas"><div class="ovb"><button class="bbig" data-cerrar="ovCenas">‹ Panel</button><h2 id="tCenas">Cenas</h2><span style="width:110px"></span></div></div>
 
 <script>
 (function(){
@@ -228,6 +258,90 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   function hhmm(d){ return d.getHours()+':'+pad(d.getMinutes()); }
   function kdia(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
   function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+
+  /* ---------- Iconos propios (SVG, trazo) ---------- */
+  var ICO = {
+    sol:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    nube:'<path d="M7 18h10a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6 1.5A3.3 3.3 0 0 0 7 18z"/>',
+    solnube:'<path d="M8 3v1.5M3.5 8H5M4.8 4.8l1 1M11.2 4.8l-1 1"/><path d="M5.6 10.6A3.2 3.2 0 0 1 11 6.8"/><path d="M9 20h8a3.5 3.5 0 0 0 0-7 4.7 4.7 0 0 0-9 1.3A2.9 2.9 0 0 0 9 20z"/>',
+    lluvia:'<path d="M7 15h10a4 4 0 0 0 0-8 5.5 5.5 0 0 0-10.6 1.5A3.3 3.3 0 0 0 7 15z"/><path d="M9 18l-1 3M13 18l-1 3M17 18l-1 3"/>',
+    viento:'<path d="M3 8h10a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/><path d="M3 16h7"/>',
+    paraguas:'<path d="M12 3a9 9 0 0 1 9 9H3a9 9 0 0 1 9-9z"/><path d="M12 12v7a2 2 0 0 0 4 0"/>',
+    gota:'<path d="M12 3s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/>',
+    termometro:'<path d="M14 14.8V4.5a2 2 0 0 0-4 0v10.3a4 4 0 1 0 4 0z"/><path d="M12 9v7"/>',
+    amanecer:'<path d="M6 18a6 6 0 0 1 12 0"/><path d="M3 21h18M12 3v6M9 6l3-3 3 3"/>',
+    atardecer:'<path d="M6 18a6 6 0 0 1 12 0"/><path d="M3 21h18M12 3v6M9 6l3 3 3-3"/>',
+    reloj:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    cubiertos:'<path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2 1-3 4-3 7v3h3"/>',
+    chef:'<path d="M7 13a4 4 0 1 1 2.2-7.3 4 4 0 0 1 5.6 0A4 4 0 1 1 17 13v7H7z"/><path d="M7 16.5h10"/>',
+    calendario:'<rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/>',
+    ajustes:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+    pin:'<path d="M12 21s-6-5.5-6-10.5a6 6 0 0 1 12 0C18 15.5 12 21 12 21z"/><circle cx="12" cy="10.5" r="2"/>',
+    alerta:'<path d="M12 4L2.5 20h19z"/><path d="M12 10v4M12 17h0"/>',
+    check:'<path d="M5 12.5l4.5 4.5L19 7.5"/>',
+    hoja:'<path d="M5 19C5 10.5 11 5 19 5c0 8.5-6 14-14 14z"/><path d="M5 19l7-7"/>',
+    carita:'<circle cx="12" cy="12" r="9"/><path d="M8.5 14.5a4.5 4.5 0 0 0 7 0M9 9.5h0M15 9.5h0"/>',
+    destello:'<path d="M12 3l2 6.5 6.5 2.5-6.5 2.5L12 21l-2-6.5L3.5 12 10 9.5z"/>',
+    candado:'<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>',
+    mas:'<path d="M12 5v14M5 12h14"/>',
+    movil:'<rect x="7" y="2.5" width="10" height="19" rx="2.5"/><path d="M11 18.5h2"/>',
+    nino:'<circle cx="12" cy="7" r="3.5"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>',
+    luna:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
+    flecha:'<path d="M9 6l6 6-6 6"/>',
+    abrigo:'<path d="M8.5 3L12 6l3.5-3L20 7l-2 3.5V21H6V10.5L4 7z"/><path d="M12 6v15M9.5 14h0M14.5 14h0"/>',
+    camiseta:'<path d="M8.5 3c.5 1.5 2 2.5 3.5 2.5S15 4.5 15.5 3L21 6.5 18.5 10 17 9v12H7V9l-1.5 1L3 6.5z"/>',
+    jersey:'<path d="M8.5 3c.5 1.5 2 2.5 3.5 2.5S15 4.5 15.5 3l4.5 3 1 12h-3L17 10v11H7V10l-1 8H3l1-12z"/><path d="M7 18h10"/>',
+    pantalon:'<path d="M7 3h10l1.5 18h-4.5L12 10.5 10 21H5.5z"/><path d="M7 6h10"/>',
+    gorro:'<path d="M5 16a7 7 0 0 1 14 0"/><rect x="4" y="16" width="16" height="4" rx="1.5"/><circle cx="12" cy="6" r="1.5"/>',
+    bufanda:'<path d="M5 6c4 2 10 2 14 0v4c-4 2-10 2-14 0z"/><path d="M13 11v9h4v-9.5"/>',
+    guantes:'<path d="M8 21v-8.5a2.5 2.5 0 0 1-1-4.5 1.5 1.5 0 0 1 2.5-.5V5a2.5 2.5 0 0 1 5 0V7a2 2 0 0 1 3 1.5V21z"/><path d="M8 17h9"/>',
+    botas:'<path d="M7 3h5.5v10.5L19 16v5H7z"/><path d="M7 17h12"/>',
+    crema:'<path d="M9 3h6v3l2 2.5V21H7V8.5L9 6z"/><path d="M10 13h4"/>',
+    gafas:'<circle cx="7" cy="14" r="3.5"/><circle cx="17" cy="14" r="3.5"/><path d="M10.5 14h3M3.5 13L5 8M20.5 13L19 8"/>'
+  };
+  function ic(n, cls){ return '<svg class="ic'+(cls?' '+cls:'')+'" viewBox="0 0 24 24" aria-hidden="true">'+(ICO[n]||ICO.check)+'</svg>'; }
+  // Icono de prenda a partir del texto (sirve para el consejo de Gemini y para el de reglas)
+  function prenda(t){
+    var x = String(t).toLowerCase(), n = 'camiseta';
+    if(/paraguas/.test(x)) n='paraguas';
+    else if(/bota|zapat|calzado|deportiv/.test(x)) n='botas';
+    else if(/bufanda|braga|cuello/.test(x)) n='bufanda';
+    else if(/guante|manopla/.test(x)) n='guantes';
+    else if(/gorro|gorra|capucha|sombrero/.test(x)) n='gorro';
+    else if(/crema|solar|protector/.test(x)) n='crema';
+    else if(/gafas/.test(x)) n='gafas';
+    else if(/abrigo|chaqueta|cortavientos|chubasquero|impermeable|plum[oó]n|parka|anorak/.test(x)) n='abrigo';
+    else if(/sudadera|jersey|rebeca|forro|polar|chaleco|capa/.test(x)) n='jersey';
+    else if(/pantal|mallas|leggin|ch[aá]ndal|falda/.test(x)) n='pantalon';
+    return n;
+  }
+  function sinEmoji(t){ return String(t).replace(/^[^A-Za-z0-9ÁÉÍÓÚÜÑáéíóúüñ¿¡(]+/, ''); }
+  function ropaHTML(items){ return items.map(function(x){ return '<span class="rit">'+ic(prenda(x))+esc(sinEmoji(x))+'</span>'; }).join(''); }
+  function avisoHTML(a){
+    var t = sinEmoji(a[1]), n = /lluvia|llover/i.test(t) ? 'paraguas' : /viento/i.test(t) ? 'viento' : /sol|uv/i.test(t) ? 'sol' : 'termometro';
+    return '<span class="aviso '+a[0]+'">'+ic(n)+esc(t)+'</span>';
+  }
+
+  /* ---------- Iconos del tiempo (SVG en color) ---------- */
+  function wsvg(k){
+    var SOL = '<circle cx="32" cy="32" r="11" fill="#F5B83D"/><g stroke="#F5B83D" stroke-width="4" stroke-linecap="round"><path d="M32 8v6M32 50v6M8 32h6M50 32h6M15 15l4 4M45 45l4 4M15 49l4-4M45 19l4-4"/></g>';
+    var LUNA = '<path d="M44 40A16 16 0 1 1 26 14a13 13 0 0 0 18 26z" fill="#F2D16B"/>';
+    var SOLP = '<circle cx="23" cy="22" r="9" fill="#F5B83D"/><g stroke="#F5B83D" stroke-width="3.5" stroke-linecap="round"><path d="M23 5v4M6 22h4M11 10l3 3M35 10l-3 3M11 34l3-3"/></g>';
+    var LUNAP = '<path d="M33 27A11 11 0 1 1 20 11a9 9 0 0 0 13 16z" fill="#F2D16B"/>';
+    function nube(col, dy){ dy = dy||0; return '<path transform="translate(0 '+dy+')" d="M19 48h27a10 10 0 0 0 0-20 14 14 0 0 0-26.8 4.2A8 8 0 0 0 19 48z" fill="'+col+'" stroke="#A8B3BD" stroke-width="2.5" stroke-linejoin="round"/>'; }
+    var GOTAS = '<g stroke="#4A90D9" stroke-width="3.5" stroke-linecap="round"><path d="M24 52l-3 7M33 52l-3 7M42 52l-3 7"/></g>';
+    var x = '';
+    if(k==='sol') x = SOL; else if(k==='luna') x = LUNA;
+    else if(k==='solnube') x = SOLP + nube('#fff', 4); else if(k==='lunanube') x = LUNAP + nube('#fff', 4);
+    else if(k==='nube') x = nube('#F1F4F7');
+    else if(k==='niebla') x = '<g stroke="#A8B3BD" stroke-width="4" stroke-linecap="round"><path d="M12 24h40M8 34h44M14 44h36"/></g>';
+    else if(k==='lluvia') x = nube('#E3E9EF', -6) + GOTAS;
+    else if(k==='chubasco') x = SOLP + nube('#fff', -2) + GOTAS;
+    else if(k==='tormenta') x = nube('#C9D2DA', -6) + '<path d="M34 40l-8 12h7l-3 10 11-14h-7l4-8z" fill="#F5B83D"/>';
+    else if(k==='nieve') x = nube('#F1F4F7', -6) + '<g fill="#7FB8E8"><circle cx="24" cy="54" r="3"/><circle cx="33" cy="58" r="3"/><circle cx="42" cy="54" r="3"/></g>';
+    else x = nube('#F1F4F7');
+    return '<svg class="wi" viewBox="0 0 64 64" aria-hidden="true">'+x+'</svg>';
+  }
   function xhr(url, ok, ko){
     try{
       var x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = 20000;
@@ -242,20 +356,20 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   var CFG = lget('panel_cfg', { worker:'', calendarios:[], entrada:'08:00', salida:'16:30' });
 
   /* ================== TIEMPO ================== */
-  var WX = null, CONSEJO = null;
-  var COD = {0:['☀️','Despejado'],1:['🌤️','Casi despejado'],2:['⛅','Nubes y claros'],3:['☁️','Nublado'],45:['🌫️','Niebla'],48:['🌫️','Niebla'],
-    51:['🌦️','Llovizna débil'],53:['🌦️','Llovizna'],55:['🌧️','Llovizna intensa'],56:['🌧️','Llovizna helada'],57:['🌧️','Llovizna helada'],
-    61:['🌦️','Lluvia débil'],63:['🌧️','Lluvia'],65:['🌧️','Lluvia fuerte'],66:['🌧️','Lluvia helada'],67:['🌧️','Lluvia helada'],
-    71:['🌨️','Nieve débil'],73:['🌨️','Nieve'],75:['❄️','Nieve fuerte'],77:['🌨️','Granizo fino'],80:['🌦️','Chubascos'],81:['🌧️','Chubascos'],82:['⛈️','Chubascos fuertes'],
-    85:['🌨️','Chubascos de nieve'],86:['❄️','Nieve fuerte'],95:['⛈️','Tormenta'],96:['⛈️','Tormenta con granizo'],99:['⛈️','Tormenta con granizo']};
-  function wcod(c, noche){ var r = COD[c] || ['🌡️','—']; if(noche && (c===0||c===1)) return ['🌙', r[1]]; if(noche && c===2) return ['☁️', r[1]]; return r; }
+  var WX = null, CONSEJO = null, WXT = null;
+  var COD = {0:['sol','Despejado'],1:['solnube','Casi despejado'],2:['solnube','Nubes y claros'],3:['nube','Nublado'],45:['niebla','Niebla'],48:['niebla','Niebla'],
+    51:['chubasco','Llovizna débil'],53:['chubasco','Llovizna'],55:['lluvia','Llovizna intensa'],56:['lluvia','Llovizna helada'],57:['lluvia','Llovizna helada'],
+    61:['chubasco','Lluvia débil'],63:['lluvia','Lluvia'],65:['lluvia','Lluvia fuerte'],66:['lluvia','Lluvia helada'],67:['lluvia','Lluvia helada'],
+    71:['nieve','Nieve débil'],73:['nieve','Nieve'],75:['nieve','Nieve fuerte'],77:['nieve','Granizo fino'],80:['chubasco','Chubascos'],81:['lluvia','Chubascos'],82:['tormenta','Chubascos fuertes'],
+    85:['nieve','Chubascos de nieve'],86:['nieve','Nieve fuerte'],95:['tormenta','Tormenta'],96:['tormenta','Tormenta con granizo'],99:['tormenta','Tormenta con granizo']};
+  function wcod(c, noche){ var r = COD[c] || ['nube','—'], k = r[0]; if(noche && k==='sol') k='luna'; else if(noche && (k==='solnube'||k==='chubasco')) k = k==='solnube' ? 'lunanube' : 'lluvia'; return [wsvg(k), r[1]]; }
 
   function cargaTiempo(){
     var url = 'https://api.open-meteo.com/v1/forecast?latitude='+LAT+'&longitude='+LON+
       '&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index,is_day'+
       '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max,uv_index_max,sunrise,sunset'+
       '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m,is_day&timezone=Europe%2FMadrid&forecast_days=3';
-    xhr(url, function(t){ try{ WX = JSON.parse(t); lset('panel_wx', {t:Date.now(), d:WX}); }catch(e){} pinta(); }, function(){ var c=lget('panel_wx',null); if(c){ WX=c.d; pinta(); } });
+    xhr(url, function(t){ try{ WX = JSON.parse(t); WXT = Date.now(); lset('panel_wx', {t:WXT, d:WX}); }catch(e){} pinta(); }, function(){ var c=lget('panel_wx',null); if(c){ WX=c.d; WXT=c.t; pinta(); } });
     xhr('tiempo.json?v='+Date.now(), function(t){ try{ CONSEJO = JSON.parse(t); }catch(e){} pinta(); });
   }
 
@@ -317,17 +431,24 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     return { reglas:reg, gemini:g };
   }
 
+  function hace(t){ var m = Math.round((Date.now()-t)/60000); return m < 60 ? 'hace '+m+' min' : 'desde las '+hhmm(new Date(t)); }
+  function viejo(t, minutos, que){
+    if(!t) return '';
+    if(Date.now() - t > minutos*60000) return '<div class="aviso err">'+ic('alerta')+esc(que)+' sin actualizar '+hace(t)+'. ¿Hay wifi?</div>';
+    return '<div class="actu">'+ic('reloj')+'Actualizado a las '+hhmm(new Date(t))+'</div>';
+  }
   function fichaTiempo(){
-    var s = '<div class="ftit">🌤️ El tiempo hoy</div>';
+    var s = '<div class="ftit">'+ic('solnube')+'El tiempo hoy</div>';
     if(!WX || !WX.current){ return s+'<div class="vacio">Cargando el tiempo…</div>'; }
     var cu = WX.current, c = wcod(cu.weather_code, !cu.is_day), d = WX.daily, k = consejoHoy();
     s += '<div class="tnow"><div class="ticon">'+c[0]+'</div><div><div class="ttemp">'+Math.round(cu.temperature_2m)+'°</div>'+
       '<div class="tmm">↓ '+Math.round(d.temperature_2m_min[0])+'°  ↑ '+Math.round(d.temperature_2m_max[0])+'° · Sensación '+Math.round(cu.apparent_temperature)+'°</div></div></div>';
     s += '<div class="tdesc">'+esc(k.gemini && k.gemini.resumen ? k.gemini.resumen : resumenDia())+'</div>';
     var items = k.gemini && k.gemini.ropa && k.gemini.ropa.length ? k.gemini.ropa : (k.reglas ? k.reglas.items : []);
-    s += '<div class="ropa"><div class="rl">👦 Para ir al cole</div>'+items.map(function(x){ return '<span class="rit">'+esc(x)+'</span>'; }).join('')+
+    s += '<div class="ropa"><div class="rl">'+ic('nino')+'Para ir al cole</div>'+ropaHTML(items)+
       (k.gemini && k.gemini.consejo ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.gemini.consejo)+'</div>' : (k.reglas ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.reglas.texto)+'</div>' : ''))+'</div>';
-    if(k.reglas && k.reglas.avisos.length) s += '<div class="ravisos">'+k.reglas.avisos.map(function(a){ return '<span class="aviso '+a[0]+'">'+esc(a[1])+'</span>'; }).join('')+'</div>';
+    if(k.reglas && k.reglas.avisos.length) s += '<div class="ravisos">'+k.reglas.avisos.map(avisoHTML).join('')+'</div>';
+    s += viejo(WXT, 120, 'El tiempo está');
     return s;
   }
 
@@ -341,7 +462,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
     // franjas del cole
     var e = aMin(CFG.entrada), sa = aMin(CFG.salida);
-    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=e-60 && m<=e+30) || (m>=sa-30 && m<=sa+60)) s += '<rect x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
+    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=e-60 && m<=e+30) || (m>=sa-30 && m<=sa+60)) s += '<rect class="banda" x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
     // lluvia (barras)
     hs.forEach(function(x,i){ var bh = x.p/100*(bot-30); if(bh>0) s += '<rect x="'+(X(i)-12)+'" y="'+(H-24-bh)+'" width="24" height="'+bh+'" rx="5" fill="#7FB3E3" opacity=".85"/>'+(x.p>=20?'<text x="'+X(i)+'" y="'+(H-28-bh)+'" font-size="11" font-weight="800" fill="#3E7CB1" text-anchor="middle">'+x.p+'%</text>':''); });
     // sensación térmica (discontinua) y temperatura (línea)
@@ -350,43 +471,43 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     s += '<path d="'+p2+'" fill="none" stroke="#9AA5AE" stroke-width="2.5" stroke-dasharray="5 5"/>';
     s += '<path d="'+p1+'" fill="none" stroke="#D9735A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>';
     hs.forEach(function(x,i){ s += '<circle cx="'+X(i)+'" cy="'+Y(x.t).toFixed(1)+'" r="5" fill="#fff" stroke="#D9735A" stroke-width="3"/>'+
-      '<text x="'+X(i)+'" y="'+(Y(x.t)-11).toFixed(1)+'" font-size="13" font-weight="800" fill="#2E2A26" text-anchor="middle">'+Math.round(x.t)+'°</text>'; });
+      '<text x="'+X(i)+'" y="'+(Y(x.t)-11).toFixed(1)+'" font-size="14" font-weight="800" fill="currentColor" text-anchor="middle">'+Math.round(x.t)+'°</text>'; });
     // viento (rachas)
-    hs.forEach(function(x,i){ var col = x.r>=60?'#8E5BB5':x.r>=40?'#B08ED6':'#C9C2BA'; s += '<text x="'+X(i)+'" y="'+(H-6)+'" font-size="11" font-weight="800" fill="'+col+'" text-anchor="middle">💨'+Math.round(x.r)+'</text>'; });
+    hs.forEach(function(x,i){ var col = x.r>=60?'#8E5BB5':x.r>=40?'#B08ED6':'#C9C2BA'; s += '<text x="'+X(i)+'" y="'+(H-6)+'" font-size="13" font-weight="800" fill="'+col+'" text-anchor="middle">'+Math.round(x.r)+'</text>'; });
     s += '</svg>';
     return s;
   }
 
   function abrirTiempo(){
     var hs = horas(), ahora = new Date(), k = consejoHoy();
-    var s = '<div class="ovb"><button class="bbig" data-cerrar="ovTiempo">‹ Panel</button><h2>🌤️ El tiempo hoy</h2><span style="width:110px"></span></div><div class="ovc">';
+    var s = '<div class="ovb"><button class="bbig" data-cerrar="ovTiempo">‹ Panel</button><h2>'+ic('solnube')+'El tiempo hoy</h2><span style="width:110px"></span></div><div class="ovc">';
     if(!WX){ s += '<div class="vacio">Sin datos del tiempo todavía.</div></div>'; $('ovTiempo').innerHTML=s; $('ovTiempo').className='ov on'; return; }
     var cu = WX.current, c = wcod(cu.weather_code, !cu.is_day), d = WX.daily;
     s += '<div class="thero"><div class="ticon">'+c[0]+'</div><div style="margin-right:30px"><div class="ttemp">'+Math.round(cu.temperature_2m)+'°</div><div class="tmm">'+esc(c[1])+' · Sensación '+Math.round(cu.apparent_temperature)+'°</div></div>'+
       '<div style="-webkit-flex:1;flex:1;min-width:260px"><div class="tdesc" style="margin:0 0 8px">'+esc(k.gemini && k.gemini.resumen ? k.gemini.resumen : resumenDia())+'</div>'+
-      '<div class="tmm">🌅 '+d.sunrise[0].slice(11)+'  ·  🌇 '+d.sunset[0].slice(11)+'  ·  UV máx '+Math.round(d.uv_index_max[0]||0)+'  ·  💨 rachas '+Math.round(d.wind_gusts_10m_max[0])+' km/h</div></div></div>';
+      '<div class="tmm">'+ic('amanecer')+d.sunrise[0].slice(11)+' &nbsp; '+ic('atardecer')+d.sunset[0].slice(11)+' &nbsp; '+ic('sol')+'UV '+Math.round(d.uv_index_max[0]||0)+' &nbsp; '+ic('viento')+'rachas '+Math.round(d.wind_gusts_10m_max[0])+' km/h</div></div></div>';
     // Ropa
     var items = k.gemini && k.gemini.ropa && k.gemini.ropa.length ? k.gemini.ropa : (k.reglas ? k.reglas.items : []);
-    s += '<div class="ropa" style="margin-top:14px"><div class="rl">👦 Cómo vestirle hoy</div>'+items.map(function(x){ return '<span class="rit">'+esc(x)+'</span>'; }).join('')+
+    s += '<div class="ropa" style="margin-top:14px"><div class="rl">'+ic('nino')+'Cómo vestirle hoy</div>'+ropaHTML(items)+
       '<div style="font-size:15px;font-weight:700;margin-top:4px">'+esc(k.gemini && k.gemini.consejo ? k.gemini.consejo : (k.reglas?k.reglas.texto:''))+'</div>'+
-      (k.reglas && k.reglas.avisos.length ? k.reglas.avisos.map(function(a){ return '<span class="aviso '+a[0]+'">'+esc(a[1])+'</span>'; }).join('') : '')+'</div>';
+      (k.reglas && k.reglas.avisos.length ? k.reglas.avisos.map(avisoHTML).join('') : '')+'</div>';
     // Bloques mañana / tarde / noche
     var bloques = [['Mañana',7,12],['Tarde',13,19],['Noche',20,23]];
     s += '<div class="tbloq">'+bloques.map(function(b){
       var f = hs.filter(function(x){ var h=x.d.getHours(); return h>=b[1] && h<=b[2]; }); if(!f.length) return '';
-      var cc = f[Math.floor(f.length/2)].c, ic = wcod(cc, b[0]==='Noche')[0];
-      return '<div class="tb"><div class="n">'+b[0]+'</div><div class="i">'+ic+'</div><div class="t">'+Math.round(min(f,function(x){return x.t;}))+'° – '+Math.round(max(f,function(x){return x.t;}))+'°</div>'+
-        '<div class="x">☔ '+max(f,function(x){return x.p;})+'%  ·  💨 '+Math.round(max(f,function(x){return x.r;}))+' km/h</div></div>';
+      var cc = f[Math.floor(f.length/2)].c, wic = wcod(cc, b[0]==='Noche')[0];
+      return '<div class="tb"><div class="n">'+b[0]+'</div><div class="i">'+wic+'</div><div class="t">'+Math.round(min(f,function(x){return x.t;}))+'° – '+Math.round(max(f,function(x){return x.t;}))+'°</div>'+
+        '<div class="x">'+ic('gota')+max(f,function(x){return x.p;})+'% &nbsp; '+ic('viento')+Math.round(max(f,function(x){return x.r;}))+' km/h</div></div>';
     }).join('')+'</div>';
     // Hora a hora
     var desde = hs.filter(function(x){ return x.d.getHours() >= Math.max(6, ahora.getHours()-1); });
     s += '<h3 class="sec">Hora a hora</h3><div class="horas">'+desde.map(function(x){
       var ah = x.d.getHours()===ahora.getHours();
       return '<div class="hc'+(ah?' ahora':'')+'"><div class="hh">'+(ah?'Ahora':x.d.getHours()+':00')+'</div><div class="hi">'+wcod(x.c, !x.dia)[0]+'</div><div class="ht">'+Math.round(x.t)+'°</div>'+
-        '<div class="hs">☔ '+x.p+'%</div><div class="hs">💨 '+Math.round(x.r)+'</div></div>';
+        '<div class="hs">'+ic('gota')+x.p+'%</div><div class="hs">'+ic('viento')+Math.round(x.r)+'</div></div>';
     }).join('')+'</div>';
     s += '<h3 class="sec">Temperatura, lluvia y viento</h3><div class="grafica">'+graficaSVG(hs.filter(function(x){ return x.d.getHours()>=6; }))+'</div>'+
-      '<div class="leyg"><i style="background:#D9735A"></i>Temperatura<i style="background:#9AA5AE"></i>Sensación térmica<i style="background:#7FB3E3"></i>Probabilidad de lluvia<i style="background:#FFF6DC;border:1px solid #E8D9A8"></i>Horas del cole · 💨 rachas de viento (km/h)</div>';
+      '<div class="leyg"><i style="background:#D9735A"></i>Temperatura<i style="background:#9AA5AE"></i>Sensación térmica<i style="background:#7FB3E3"></i>Probabilidad de lluvia<i style="background:#FFF6DC;border:1px solid #E8D9A8"></i>Horas del cole<i style="background:#B08ED6"></i>Fila de abajo: rachas de viento (km/h)</div>';
     // Mañana
     if(d.time[1]){ var c2 = wcod(d.weather_code[1]); s += '<h3 class="sec">Mañana, '+DIAS[fechaLocal(d.time[1]).getDay()]+'</h3><div class="dtxt">'+c2[0]+' '+esc(c2[1])+'. Entre '+Math.round(d.temperature_2m_min[1])+'° y '+Math.round(d.temperature_2m_max[1])+'°, lluvia '+d.precipitation_probability_max[1]+'%, rachas de '+Math.round(d.wind_gusts_10m_max[1])+' km/h.</div>'; }
     s += '<div class="leyg" style="margin-top:14px">Datos: Open-Meteo'+(k.gemini?' · Consejo de ropa: Gemini':'')+'</div></div>';
@@ -415,10 +536,10 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     document.head.appendChild(sc);
   }
   function fichaCenas(){
-    var s = '<div class="ftit">🍽️ Cenas de hoy</div>';
+    var s = '<div class="ftit">'+ic('cubiertos')+'Cenas de hoy</div>';
     if(!CEN || !CEN.hoy) return s+'<div class="vacio">Cargando cenas…</div>';
     var h = CEN.hoy, hoyk = kdia(new Date());
-    if(h.fecha !== hoyk) s += '<div class="cole" style="background:#FFF6DC">⏳ Las cenas de hoy se están preparando. Mientras tanto, las de '+esc(h.fecha)+'.</div>';
+    if(h.fecha !== hoyk) s += '<div class="cole aviso-viejo">'+ic('reloj')+'Las cenas de hoy se están preparando. Mientras tanto, las de '+esc(h.fecha)+'.</div>';
     var pl = (h.cole && h.cole.platos) || [];
     if(pl.length) s += '<div class="cole"><b>En el cole ha comido</b>'+esc(pl.slice(0,2).join(' · '))+'</div>';
     var cenas = h.cenas || [];
@@ -426,8 +547,10 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     var con = cenas.filter(function(r){ return r.foto; }), tres = con.concat(cenas.filter(function(r){ return !r.foto; })).slice(0,3);
     cenas.forEach(function(r){ window['ILUS_'+String(r.id).replace(/[^a-zA-Z0-9]/g,'_')] = ilus(r); });
     if(tres.length) s += '<div class="mosaico">'+tres.map(function(r){ return '<div>'+imgOIlus(r, 400)+'</div>'; }).join('')+'</div>';
+    var hora = new Date().getHours();
+    if(h.fecha !== hoyk && hora >= 9) s += '<div class="aviso err">'+ic('alerta')+'Las cenas de hoy no se han actualizado todavía</div>';
     s += '<ul class="cl">'+cenas.map(function(r){
-      var badge = r.gourmet ? '✨' : r.healthy ? '💪' : r.peques ? '🧒' : '';
+      var badge = r.gourmet ? ic('destello','b-g') : r.healthy ? ic('hoja','b-h') : r.peques ? ic('carita','b-p') : '';
       var th = '<span class="th"><span class="thi">'+imgOIlus(r, 160)+'</span>'+(badge ? '<span class="tb2">'+badge+'</span>' : '')+'</span>';
       var sub = [r.cocina, r.tiempo ? r.tiempo+' min' : ''].filter(function(x){return x;}).join(' · ');
       return '<li>'+th+'<span>'+esc(r.titulo)+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'</span></li>';
@@ -435,7 +558,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     return s;
   }
   function abrirCenas(){
-    var ov = $('ovCenas');
+    var ov = $('ovCenas'); $('tCenas').innerHTML = ic('cubiertos')+'Cenas';
     if(!ov.querySelector('iframe')){ var f = document.createElement('iframe'); f.src = CENAS; ov.appendChild(f); }
     ov.className = 'ov on';
   }
@@ -578,20 +701,20 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   }
   function evHTML(e, d){
     return '<div class="ev"><div class="bar" style="background:'+esc(e.color)+'"></div><div class="evb"><div class="evh">'+esc(horaEv(e,d))+' · '+esc(e.cal)+'</div>'+
-      '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">📍 '+esc(e.lugar)+'</div>':'')+'</div></div>';
+      '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">'+ic('pin')+esc(e.lugar)+'</div>':'')+'</div></div>';
   }
   function fichaCal(){
-    var s = '<div class="ftit">📅 Hoy</div>';
-    if(!(CFG.calendarios||[]).length) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">⚙️ Configurar calendarios</button></div>';
+    var s = '<div class="ftit">'+ic('calendario')+'Hoy</div>';
+    if(!(CFG.calendarios||[]).length) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">'+ic('ajustes')+'Configurar calendarios</button></div>';
     var errs = (CFG.calendarios||[]).filter(function(c){ return CALERR[c.url]; });
-    if(errs.length) s += errs.map(function(c){ return '<div class="aviso" style="background:#FBE4E4;color:#9B2C2C;margin:0 0 8px">⚠️ '+esc(c.nombre)+': '+esc(CALERR[c.url])+'</div>'; }).join('');
+    if(errs.length) s += errs.map(function(c){ return '<div class="aviso err">'+ic('alerta')+esc(c.nombre)+': '+esc(CALERR[c.url])+'</div>'; }).join('');
     var hoy = new Date(), ev = eventosDe(hoy);
     var ahora = Date.now();
     var vis = ev.filter(function(e){ return e.todo || +e.fin > ahora; });
-    if(!vis.length) s += '<div class="vacio">'+(ev.length ? '✅ Ya no queda nada más hoy' : '🌿 Hoy no hay nada en el calendario')+'</div>';
+    if(!vis.length) s += '<div class="vacio">'+(ev.length ? ic('check')+' Ya no queda nada más hoy' : ic('hoja')+' Hoy no hay nada en el calendario')+'</div>';
     else s += vis.slice(0,6).map(function(e){ return evHTML(e, hoy); }).join('') + (vis.length>6 ? '<div class="manana">+ '+(vis.length-6)+' más</div>' : '');
     var man = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()+1), em = eventosDe(man);
-    if(CALT) s += '<div class="manana" style="font-weight:700">Actualizado a las '+hhmm(CALT)+'</div>';
+    s += viejo(CALT ? +CALT : (EVS ? EVS.t : null), 60, 'El calendario está');
     s += '<div class="manana">Mañana: '+(em.length ? em.length+' evento'+(em.length>1?'s':'')+' · '+esc(em[0].titulo) : 'nada')+'</div>';
     return s;
   }
@@ -599,7 +722,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   var VCAL = 'mes', REF = new Date(), SEL = new Date();
   function abrirCal(){ VCAL = lget('panel_vcal','mes'); REF = new Date(); SEL = new Date(); pintaCal(); $('ovCal').className = 'ov on'; $('ovCal').scrollTop = 0; }
   function pintaCal(){
-    var hoyk = kdia(new Date()), s = '<div class="ovb"><button class="bbig" data-cerrar="ovCal">‹ Panel</button><h2>📅 Calendario</h2><button class="bbig" data-ajustes="1">⚙️</button></div><div class="ovc">';
+    var hoyk = kdia(new Date()), s = '<div class="ovb"><button class="bbig" data-cerrar="ovCal">‹ Panel</button><h2>'+ic('calendario')+'Calendario</h2><button class="bbig" data-ajustes="1" aria-label="Ajustes">'+ic('ajustes')+'</button></div><div class="ovc">';
     var tit = VCAL==='mes' ? cap(MESES[REF.getMonth()])+' '+REF.getFullYear() : (function(){ var l = lunesDe(REF), d = new Date(l.getFullYear(), l.getMonth(), l.getDate()+6); return l.getDate()+' '+MESES[l.getMonth()].slice(0,3)+' – '+d.getDate()+' '+MESES[d.getMonth()].slice(0,3); })();
     s += '<div class="calbar"><div class="seg"><button class="'+(VCAL==='mes'?'on':'')+'" data-vcal="mes">Mes</button><button class="'+(VCAL==='sem'?'on':'')+'" data-vcal="sem">Semana</button></div>'+
       '<div class="nav"><button class="nb" data-cnav="-1">‹</button><span class="nt">'+tit+'</span><button class="nb" data-cnav="1">›</button><button class="hoyb" data-cnav="0">Hoy</button></div></div>';
@@ -638,23 +761,23 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   /* ================== AJUSTES ================== */
   var NUEVO = { color: PALETA[0] };
   function abrirAjustes(){
-    var s = '<div class="ovb"><button class="bbig" data-cerrar="ovAjustes">‹ Panel</button><h2>⚙️ Ajustes</h2><span style="width:110px"></span></div><div class="ovc">';
-    s += '<div class="form"><h3>📅 Tus calendarios</h3>'+
-      '<div class="priv">🔒 <b>Privado:</b> los calendarios que añadas se guardan <b>solo en este aparato</b>. No se publican en la web ni se comparten con nadie: otras personas que abran el panel no los ven. '+
+    var s = '<div class="ovb"><button class="bbig" data-cerrar="ovAjustes">‹ Panel</button><h2>'+ic('ajustes')+'Ajustes</h2><span style="width:110px"></span></div><div class="ovc">';
+    s += '<div class="form"><h3>'+ic('calendario')+'Tus calendarios</h3>'+
+      '<div class="priv">'+ic('candado')+'<b>Privado:</b> los calendarios que añadas se guardan <b>solo en este aparato</b>. No se publican en la web ni se comparten con nadie: otras personas que abran el panel no los ven. '+
       'Para poder leerlos, el panel los descarga a través de un pequeño intermediario que solo los reenvía y no guarda nada.</div>'+
       ((CFG.calendarios||[]).length ? CFG.calendarios.map(function(c,i){ return '<div class="crow"><span class="cc" style="background:'+esc(c.color)+'"></span><div class="cn2">'+esc(c.nombre)+
-        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado" style="color:#B23A3A">⚠️ '+esc(CALERR[c.url])+'</div>':(CALN[c.url]?'<div class="estado" style="color:#3F7A3A">✅ Leído: '+CALN[c.url].ev+' eventos en el calendario, '+CALN[c.url].vis+' en los próximos meses</div>':'<div class="estado" style="color:#7A6F64">Cargando…</div>'))+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
+        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado mal">'+ic('alerta')+esc(CALERR[c.url])+'</div>':(CALN[c.url]?'<div class="estado bien">'+ic('check')+'Leído: '+CALN[c.url].ev+' eventos en el calendario, '+CALN[c.url].vis+' en los próximos meses</div>':'<div class="estado" style="color:#7A6F64">Cargando…</div>'))+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
         : '<div class="ayuda" style="margin:10px 0">Todavía no has añadido ningún calendario.</div>')+'</div>';
-    s += '<div class="form"><h3>➕ Añadir un calendario</h3>'+
+    s += '<div class="form"><h3>'+ic('mas')+'Añadir un calendario</h3>'+
       '<div class="ayuda">El panel no puede leer directamente el calendario del iPad o del móvil (Apple y Google no lo permiten a las webs). '+
       'Lo que se hace es copiar un <b>enlace especial</b> de tu calendario y pegarlo aquí. Se hace una sola vez por calendario.</div>'+
       '<div class="pasos2"><div class="paso2"><div class="pt2">1 · Copia el enlace de tu calendario</div>'+
-        '<div class="op"><b>📗 Si es de Google Calendar</b> (mejor desde un ordenador):<ol>'+
-          '<li>Entra en <b>calendar.google.com</b>.</li><li>Pulsa la rueda <b>⚙️</b> (arriba a la derecha) → <b>Configuración</b>.</li>'+
+        '<div class="op"><b>'+ic('calendario')+'Si es de Google Calendar</b> (mejor desde un ordenador):<ol>'+
+          '<li>Entra en <b>calendar.google.com</b>.</li><li>Pulsa la <b>rueda dentada</b> (arriba a la derecha) → <b>Configuración</b>.</li>'+
           '<li>A la izquierda, en <b>"Configuración de mis calendarios"</b>, pulsa el calendario que quieras.</li>'+
           '<li>Baja hasta <b>"Integrar el calendario"</b> y copia la <b>"Dirección secreta en formato iCal"</b> (termina en <b>basic.ics</b>).</li></ol>'+
           '<span class="nota">Es secreta: no la compartas con nadie. Para pasarla al iPad, puedes enviártela en una nota o con AirDrop.</span></div>'+
-        '<div class="op"><b>🍎 Si es del calendario del iPhone/iPad (iCloud)</b>:<ol>'+
+        '<div class="op"><b>'+ic('movil')+'Si es del calendario del iPhone/iPad (iCloud)</b>:<ol>'+
           '<li>Abre la app <b>Calendario</b> → <b>Calendarios</b> (abajo).</li><li>Pulsa la <b>ⓘ</b> junto al calendario.</li>'+
           '<li>Activa <b>"Calendario público"</b> y pulsa <b>"Compartir enlace"</b> → <b>Copiar</b>.</li></ol>'+
           '<span class="nota">Ojo: con iCloud, cualquiera que tenga ese enlace podría ver ese calendario. El de Google es más privado.</span></div></div>'+
@@ -662,23 +785,32 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
       '<label>Nombre (cómo quieres que se vea)</label><input id="cNom" placeholder="Familia, Trabajo, Cole…" value="'+esc(NUEVO.nombre||'')+'">'+
       '<label>Enlace del calendario</label><input id="cUrl" placeholder="Pega aquí el enlace (https://… o webcal://…)" value="'+esc(NUEVO.url||'')+'" autocapitalize="off" autocorrect="off">'+
       '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NUEVO.color===p?'on':'')+'" data-color="'+p+'"></button>'; }).join('')+'</div></div>'+
-      '<div class="paso2"><div class="pt2">3 · Pulsa añadir</div><button class="boton" data-addcal="1">➕ Añadir calendario</button>'+
-      '<div class="ayuda" style="margin-top:8px">En unos segundos verás arriba <b>"✅ Leído"</b> y sus eventos aparecerán en el panel, con su color. Se actualizan solos cada 15 minutos.</div></div></div></div>';
-    s += '<div class="form"><h3>👦 Horario del cole</h3><div class="ayuda">Para el consejo de ropa: se mira el tiempo a la hora de ir y de volver.</div><div class="dos"><div><label>Entrada</label><input id="cEnt" type="time" value="'+esc(CFG.entrada)+'"></div><div><label>Salida</label><input id="cSal" type="time" value="'+esc(CFG.salida)+'"></div></div>'+
-      '<button class="boton" data-savehoras="1">Guardar</button></div></div>';
+      '<div class="paso2"><div class="pt2">3 · Pulsa añadir</div><button class="boton" data-addcal="1">'+ic('mas')+'Añadir calendario</button>'+
+      '<div class="ayuda" style="margin-top:8px">En unos segundos verás arriba <b>"Leído"</b> en verde y sus eventos aparecerán en el panel, con su color. Se actualizan solos cada 15 minutos.</div></div></div></div>';
+    s += '<div class="form"><h3>'+ic('nino')+'Horario del cole</h3><div class="ayuda">Para el consejo de ropa: se mira el tiempo a la hora de ir y de volver.</div><div class="dos"><div><label>Entrada</label><input id="cEnt" type="time" value="'+esc(CFG.entrada)+'"></div><div><label>Salida</label><input id="cSal" type="time" value="'+esc(CFG.salida)+'"></div></div>'+
+      '<button class="boton" data-savehoras="1">Guardar</button></div>'+
+      '<div class="form"><h3>'+ic('luna')+'Modo noche</h3><div class="ayuda">Por la noche el panel se oscurece para que moleste menos. En automático, cambia al atardecer y vuelve a la claridad al amanecer.</div>'+
+      '<div class="seg" style="margin-top:10px">'+[['auto','Automático'],['claro','Siempre claro'],['oscuro','Siempre oscuro']].map(function(o){ return '<button class="'+((CFG.modo||'auto')===o[0]?'on':'')+'" data-modo="'+o[0]+'">'+o[1]+'</button>'; }).join('')+'</div></div></div>';
     $('ovAjustes').innerHTML = s; $('ovAjustes').className = 'ov on';
   }
   function guardaCfg(){ lset('panel_cfg', CFG); }
 
   /* ================== Pintar panel ================== */
+  function esNoche(){
+    var m = CFG.modo || 'auto'; if(m==='claro') return false; if(m==='oscuro') return true;
+    var d = new Date(), ahora = d.getHours()*60 + d.getMinutes(), sal = 7*60+45, pue = 18*60;
+    if(WX && WX.daily && WX.daily.sunrise){ var sr = fechaLocal(WX.daily.sunrise[0]), ss = fechaLocal(WX.daily.sunset[0]); sal = sr.getHours()*60+sr.getMinutes(); pue = ss.getHours()*60+ss.getMinutes(); }
+    return ahora < sal - 15 || ahora > pue + 30;
+  }
   function pinta(){
     var d = new Date(), h = d.getHours();
+    document.body.className = esNoche() ? 'noche' : '';
     var saludo = h < 6 ? 'Buenas noches' : h < 13 ? 'Buenos días' : h < 21 ? 'Buenas tardes' : 'Buenas noches';
     var s = '<div class="cab"><div><div class="saludo">'+saludo+'</div><div class="hora" id="hora">'+hhmm(d)+'</div><div class="fecha">'+cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()]+'</div></div>'+
-      '<div class="cabd"><button class="ajustes" data-ajustes="1">⚙️</button></div></div>';
-    s += '<div class="fichas"><div class="ficha"><div class="fin tw" data-abrir="tiempo"><div class="fbody">'+fichaTiempo()+'</div><div class="cta">🕒 Ver el tiempo por horas<span>›</span></div></div></div>'+
-      '<div class="ficha"><div class="fin cn" data-abrir="cenas"><div class="fbody">'+fichaCenas()+'</div><div class="cta">👩‍🍳 Ver las recetas<span>›</span></div></div></div>'+
-      '<div class="ficha"><div class="fin ca" data-abrir="cal"><div class="fbody">'+fichaCal()+'</div><div class="cta">🗓️ Ver el mes y la semana<span>›</span></div></div></div></div>';
+      '<div class="cabd"><button class="ajustes" data-ajustes="1" aria-label="Ajustes">'+ic('ajustes')+'</button></div></div>';
+    s += '<div class="fichas"><div class="ficha"><div class="fin tw" data-abrir="tiempo"><div class="fbody">'+fichaTiempo()+'</div><div class="cta">'+ic('reloj')+'Tiempo por horas'+ic('flecha','fl')+'</div></div></div>'+
+      '<div class="ficha"><div class="fin cn" data-abrir="cenas"><div class="fbody">'+fichaCenas()+'</div><div class="cta">'+ic('chef')+'Ver las recetas'+ic('flecha','fl')+'</div></div></div>'+
+      '<div class="ficha"><div class="fin ca" data-abrir="cal"><div class="fbody">'+fichaCal()+'</div><div class="cta">'+ic('calendario')+'Ver el mes y la semana'+ic('flecha','fl')+'</div></div></div></div>';
     $('app').innerHTML = s;
   }
 
@@ -708,12 +840,13 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
           NUEVO = { color: PALETA[CFG.calendarios.length % PALETA.length] }; abrirAjustes(); cargaCalendarios(); return;
         }
         if((a = t.getAttribute('data-delcal')) !== null){ CFG.calendarios.splice(+a,1); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
+        if((a = t.getAttribute('data-modo'))){ CFG.modo = a; guardaCfg(); pinta(); abrirAjustes(); return; }
         if(t.getAttribute('data-savehoras')){ CFG.entrada = $('cEnt').value || '08:00'; CFG.salida = $('cSal').value || '16:30'; guardaCfg(); abrirAjustes(); pinta(); return; }
       }
       t = t.parentNode;
     }
   });
-  function alertaForm(m){ var b = document.createElement('div'); b.className='estado'; b.style.color='#B23A3A'; b.innerHTML='⚠️ '+esc(m); var f=$('ovAjustes').querySelector('.form'); f.appendChild(b); }
+  function alertaForm(m){ var b = document.createElement('div'); b.className='estado'; b.style.color='#B23A3A'; b.className='estado mal'; b.innerHTML=ic('alerta')+esc(m); var f=$('ovAjustes').querySelector('.form'); f.appendChild(b); }
 
   // Reloj y recargas
   var ultDia = kdia(new Date());
