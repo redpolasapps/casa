@@ -396,7 +396,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   }
 
   /* ================== CALENDARIO ================== */
-  var EVS = lget('panel_evs', null), CALERR = {};
+  var EVS = lget('panel_evs', null), CALERR = {}, CALN = {}, CALT = null;
   function revive(list){ return (list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; }); }
   var EVENTOS = EVS ? revive(EVS.ev) : [];
 
@@ -453,18 +453,24 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
       }
       var seguir = true;
       if(R.FREQ==='DAILY'){
-        for(var f=new Date(d0); seguir && guard<2000; guard++){ seguir = emite(new Date(f)); f.setDate(f.getDate()+iv); }
+        var f = new Date(d0);
+        if(!cnt && desde > d0){ var saltar = Math.floor((desde - d0) / (iv*86400000)) - 1; if(saltar > 0) f = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate()+saltar*iv, H, Mi); }
+        for(; seguir && guard<3000; guard++){ seguir = emite(new Date(f)); f.setDate(f.getDate()+iv); }
       } else if(R.FREQ==='WEEKLY'){
         var dias = R.BYDAY ? R.BYDAY.split(',').map(function(x){ return BD[x.slice(-2)]; }).sort() : [d0.getDay()];
         var lunes = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate()-((d0.getDay()+6)%7));
-        for(var w=0; seguir && guard<1000; w+=iv, guard++){
+        var w0 = 0;
+        if(!cnt && desde > d0){ var sw = Math.floor((desde - lunes) / (7*86400000)); w0 = Math.max(0, Math.floor(sw/iv)*iv - iv); }
+        for(var w=w0; seguir && guard<1000; w+=iv, guard++){
           for(var j=0;j<7 && seguir;j++){
             var dd = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate()+w*7+j, H, Mi);
             if(dias.indexOf(dd.getDay())>=0) seguir = emite(dd);
           }
         }
       } else if(R.FREQ==='MONTHLY'){
-        for(var mm=0; seguir && guard<600; mm+=iv, guard++){
+        var m0 = 0;
+        if(!cnt && desde > d0){ var sm = (desde.getFullYear()-d0.getFullYear())*12 + desde.getMonth()-d0.getMonth(); m0 = Math.max(0, Math.floor(sm/iv)*iv - iv); }
+        for(var mm=m0; seguir && guard<600; mm+=iv, guard++){
           var y = d0.getFullYear(), mo = d0.getMonth()+mm, cand = [];
           if(R.BYDAY){
             R.BYDAY.split(',').forEach(function(bd){
@@ -494,9 +500,13 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     cals.forEach(function(c){
       var url = WORKER + '/?url=' + encodeURIComponent(c.url.replace(/^webcal:\/\//i,'https://'));
       xhr(url, function(t){
-        try{ acc = acc.concat(parseICS(t, c, desde, hasta)); CALERR[c.url] = ''; }catch(e){ CALERR[c.url] = 'No se pudo leer'; }
+        try{
+          if(String(t).indexOf('BEGIN:VCALENDAR') < 0) throw new Error('no es un calendario');
+          var nv = parseICS(t, c, desde, hasta), tot = (String(t).match(/BEGIN:VEVENT/g)||[]).length;
+          acc = acc.concat(nv); CALERR[c.url] = ''; CALN[c.url] = { ev:tot, vis:nv.length };
+        }catch(e){ CALERR[c.url] = 'No se pudo leer el calendario ('+e.message+')'; }
         fin();
-      }, function(st){ CALERR[c.url] = 'Error '+st; fin(); });
+      }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); });
     });
     function fin(){
       if(--pend > 0) return;
@@ -504,7 +514,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
       var fallidos = cals.filter(function(c){ return CALERR[c.url]; }).map(function(c){ return c.nombre; });
       if(fallidos.length) acc = acc.concat(EVENTOS.filter(function(e){ return fallidos.indexOf(e.cal)>=0; }));
       acc.sort(function(a,b){ return (a.todo===b.todo ? a.ini-b.ini : (a.todo?-1:1)); });
-      EVENTOS = acc;
+      EVENTOS = acc; CALT = new Date();
       lset('panel_evs', { t:Date.now(), ev:acc.map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, todo:e.todo, ini:+e.ini, fin:+e.fin }; }) });
       pinta(); if($('ovCal').className.indexOf('on')>=0) pintaCal();
       if($('ovAjustes').className.indexOf('on')>=0) abrirAjustes();
@@ -528,12 +538,15 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   function fichaCal(){
     var s = '<div class="ftit">📅 Hoy</div><span class="mas">Ver mes ›</span>';
     if(!(CFG.calendarios||[]).length) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">⚙️ Configurar calendarios</button></div>';
+    var errs = (CFG.calendarios||[]).filter(function(c){ return CALERR[c.url]; });
+    if(errs.length) s += errs.map(function(c){ return '<div class="aviso" style="background:#FBE4E4;color:#9B2C2C;margin:0 0 8px">⚠️ '+esc(c.nombre)+': '+esc(CALERR[c.url])+'</div>'; }).join('');
     var hoy = new Date(), ev = eventosDe(hoy);
     var ahora = Date.now();
     var vis = ev.filter(function(e){ return e.todo || +e.fin > ahora; });
     if(!vis.length) s += '<div class="vacio">'+(ev.length ? '✅ Ya no queda nada más hoy' : '🌿 Hoy no hay nada en el calendario')+'</div>';
     else s += vis.slice(0,6).map(function(e){ return evHTML(e, hoy); }).join('') + (vis.length>6 ? '<div class="manana">+ '+(vis.length-6)+' más</div>' : '');
     var man = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()+1), em = eventosDe(man);
+    if(CALT) s += '<div class="manana" style="font-weight:700">Actualizado a las '+hhmm(CALT)+'</div>';
     s += '<div class="manana">Mañana: '+(em.length ? em.length+' evento'+(em.length>1?'s':'')+' · '+esc(em[0].titulo) : 'nada')+'</div>';
     return s;
   }
@@ -583,7 +596,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     var s = '<div class="ovb"><button class="bbig" data-cerrar="ovAjustes">‹ Panel</button><h2>⚙️ Ajustes</h2><span style="width:110px"></span></div><div class="ovc">';
     s += '<div class="form"><h3>📅 Calendarios</h3>'+
       ((CFG.calendarios||[]).length ? CFG.calendarios.map(function(c,i){ return '<div class="crow"><span class="cc" style="background:'+esc(c.color)+'"></span><div class="cn2">'+esc(c.nombre)+
-        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado" style="color:#B23A3A">⚠️ '+esc(CALERR[c.url])+'</div>':'')+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
+        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado" style="color:#B23A3A">⚠️ '+esc(CALERR[c.url])+'</div>':(CALN[c.url]?'<div class="estado" style="color:#3F7A3A">✅ Leído: '+CALN[c.url].ev+' eventos en el calendario, '+CALN[c.url].vis+' en los próximos meses</div>':'<div class="estado" style="color:#7A6F64">Cargando…</div>'))+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
         : '<div class="ayuda">Todavía no hay calendarios.</div>')+
       '<label>Nombre</label><input id="cNom" placeholder="Familia, Trabajo, Cole…" value="'+esc(NUEVO.nombre||'')+'">'+
       '<label>Enlace del calendario (.ics)</label><input id="cUrl" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics" value="'+esc(NUEVO.url||'')+'" autocapitalize="off" autocorrect="off">'+
