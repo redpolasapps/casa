@@ -90,11 +90,11 @@ Resumen: ${resumen}.
 ${ENFOQUE} Ten en cuenta la SENSACIÓN TÉRMICA, la LLUVIA y el VIENTO (con rachas de más de 40 km/h hace más frío y conviene cortavientos o capucha; con más de 60 km/h, avisa). Si hay mucha diferencia entre la mañana y la tarde, dilo (por ejemplo, capas que se pueda quitar).
 Responde SOLO con JSON:
 {"resumen":"1 frase sobre cómo será el día (cielo, temperaturas, lluvia, viento)",
- "ropa":["4 a 7 prendas o accesorios, cada uno empezando por un emoji, p. ej. '🧥 Abrigo', '🧢 Gorro', '☂️ Paraguas'"],
+ "ropa":["4 a 6 prendas o accesorios en español sencillo, SIN emojis ni palabras en inglés, solo ropa de niño real, p. ej. 'Abrigo', 'Gorro', 'Paraguas', 'Zapatillas cerradas'"],
  "consejo":"1 frase práctica y cercana (p. ej. 'Por la mañana hace frío y viento: abrígale bien; a la salida podrá ir sin abrigo')"}`;
 
 const g = await gemini(prompt);
 if (!g || !Array.isArray(g.ropa) || !g.resumen) throw new Error("Respuesta de Gemini no válida");
-const datos = { fecha: hoy, tanda: TANDA, generado: new Date().toISOString(), resumen: String(g.resumen), ropa: g.ropa.slice(0, 8).map(String), consejo: String(g.consejo || "") };
+const datos = { fecha: hoy, tanda: TANDA, generado: new Date().toISOString(), resumen: String(g.resumen), ropa: g.ropa.slice(0, 7).map((x) => String(x).replace(/^[^\p{L}0-9¿¡(]+/u, "").replace(/^[a-z_]+:?\s+(?=\p{Lu})/u, "").trim()).filter((x) => x && !/sart[eé]n|cacerola|olla/i.test(x)), consejo: String(g.consejo || "") };
 await writeFile(new URL("../tiempo.json", import.meta.url), JSON.stringify(datos, null, 1) + "\n");
 log("OK:", datos.resumen);

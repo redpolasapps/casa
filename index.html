@@ -30,11 +30,15 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .aviso-viejo{background:#FFF6DC}
 .estado.mal{color:#B23A3A}.estado.bien{color:#3F7A3A}
 /* Cabecera: hora grande */
-.cab{display:-webkit-flex;display:flex;-webkit-align-items:flex-end;align-items:flex-end;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:20px}
+.cab{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:20px}
 .hora{font-family:"Fraunces",Georgia,serif;font-size:110px;line-height:.9;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
 .fecha{font-size:30px;font-family:"Fraunces",Georgia,serif;font-weight:700;margin-top:8px;text-transform:none}
 .saludo{font-size:16px;color:var(--soft);font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
 .cabd{text-align:right}
+.cabi{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
+.cabi .hora{margin-right:26px}
+.cabi .fecha{margin-top:4px}
+@media (max-width:600px){ .cabi{display:block} .cabi .hora{margin-right:0} }
 .ajustes{width:52px;height:52px;border-radius:26px;background:#fff;box-shadow:0 2px 0 var(--line);font-size:24px}
 
 /* Fichas */
@@ -315,8 +319,8 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     else if(/pantal|mallas|leggin|ch[aá]ndal|falda/.test(x)) n='pantalon';
     return n;
   }
-  function sinEmoji(t){ return String(t).replace(/^[^A-Za-z0-9ÁÉÍÓÚÜÑáéíóúüñ¿¡(]+/, ''); }
-  function ropaHTML(items){ return items.map(function(x){ return '<span class="rit">'+ic(prenda(x))+esc(sinEmoji(x))+'</span>'; }).join(''); }
+  function sinEmoji(t){ return String(t).replace(/^[^A-Za-z0-9ÁÉÍÓÚÜÑáéíóúüñ¿¡(]+/, '').replace(/^[a-z_]+:?\s+(?=[A-ZÁÉÍÓÚÑ])/, ''); }
+  function ropaHTML(items){ return items.filter(function(x){ return !/sart[eé]n|cacerola|olla/i.test(x); }).map(function(x){ return '<span class="rit">'+ic(prenda(x))+esc(sinEmoji(x))+'</span>'; }).join(''); }
   function avisoHTML(a){
     var t = sinEmoji(a[1]), n = /lluvia|llover/i.test(t) ? 'paraguas' : /viento/i.test(t) ? 'viento' : /sol|uv/i.test(t) ? 'sol' : 'termometro';
     return '<span class="aviso '+a[0]+'">'+ic(n)+esc(t)+'</span>';
@@ -805,7 +809,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     var d = new Date(), h = d.getHours();
     document.body.className = esNoche() ? 'noche' : '';
     var saludo = h < 6 ? 'Buenas noches' : h < 13 ? 'Buenos días' : h < 21 ? 'Buenas tardes' : 'Buenas noches';
-    var s = '<div class="cab"><div><div class="saludo">'+saludo+'</div><div class="hora" id="hora">'+hhmm(d)+'</div><div class="fecha">'+cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()]+'</div></div>'+
+    var s = '<div class="cab"><div class="cabi"><div class="hora" id="hora">'+hhmm(d)+'</div><div><div class="saludo">'+saludo+'</div><div class="fecha">'+cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()]+'</div></div></div>'+
       '<div class="cabd"><button class="ajustes" data-ajustes="1" aria-label="Ajustes">'+ic('ajustes')+'</button></div></div>';
     s += '<div class="fichas"><div class="ficha"><div class="fin tw" data-abrir="tiempo"><div class="fbody">'+fichaTiempo()+'</div><div class="cta">'+ic('reloj')+'Tiempo por horas'+ic('flecha','fl')+'</div></div></div>'+
       '<div class="ficha"><div class="fin cn" data-abrir="cenas"><div class="fbody">'+fichaCenas()+'</div><div class="cta">'+ic('chef')+'Ver las recetas'+ic('flecha','fl')+'</div></div></div>'+
