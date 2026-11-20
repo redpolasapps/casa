@@ -18,6 +18,7 @@ async function gemini(prompt) {
       const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
         method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": key },
         body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json", temperature: 0.4 } }),
+        signal: AbortSignal.timeout(60000),
       });
       const t = await r.text();
       if (r.status === 404) { err = new Error(modelo + " 404"); break; }
