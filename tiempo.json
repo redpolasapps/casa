@@ -1,14 +1,13 @@
 {
  "fecha": "2026-11-20",
- "tanda": "manana",
- "generado": "2026-11-20T10:25:02.485Z",
- "resumen": "Día fresco por la mañana con viento y rachas moderadas, templándose por la tarde sin riesgo de lluvia.",
+ "tanda": "tarde",
+ "generado": "2026-11-20T12:05:22.468Z",
+ "resumen": "Tarde agradable y sin lluvia, con temperaturas suaves que rondan los 17 grados y viento ya en calma.",
  "ropa": [
-  "Camiseta interior de manga larga",
-  "Jersey de punto",
-  "Chaqueta cortavientos",
+  "Jersey fino",
   "Pantalón largo",
-  "Zapatillas cerradas"
+  "Zapatillas cerradas",
+  "Chaqueta ligera"
  ],
- "consejo": "A primera hora hace viento y sensación de frío, así que salid bien abrigados; por la tarde bajará el viento y hará más agradable."
+ "consejo": "A la salida del cole y para ir al parque ya no hace tanto viento como por la mañana, con una chaqueta ligera estará perfecto."
 }
