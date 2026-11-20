@@ -583,9 +583,8 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     return s;
   }
   function abrirCenas(){
-    var ov = $('ovCenas'); $('tCenas').innerHTML = ic('cubiertos')+'Cenas';
-    if(!ov.querySelector('iframe')){ var f = document.createElement('iframe'); f.src = CENAS; ov.appendChild(f); }
-    ov.className = 'ov on';
+    // Se abre la app de cenas a pantalla completa (dentro de un marco, el iPad no deja hacer scroll)
+    location.href = CENAS + '?panel=1';
   }
 
   /* ================== CALENDARIO ================== */
