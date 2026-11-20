@@ -29,6 +29,22 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .aviso.err{background:#FBE4E4;color:#9B2C2C;margin:8px 0}
 .aviso-viejo{background:#FFF6DC}
 .estado.mal{color:#B23A3A}.estado.bien{color:#3F7A3A}
+/* Detalle de evento */
+.ev[data-ev],.se[data-ev]{cursor:pointer}
+.evn{font-size:13.5px;font-weight:800;color:var(--soft);margin-top:3px}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:40}
+.modal.on{display:block}
+.mfondo{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(30,24,20,.45)}
+.mcaja{position:relative;margin:8vh auto 0;width:88%;max-width:560px;max-height:80vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:var(--card,#fff);color:var(--ink);border-radius:24px;padding:26px 26px 24px 34px;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.mbar{position:absolute;left:0;top:0;bottom:0;width:10px}
+.mx{position:absolute;top:10px;right:12px;width:48px;height:48px;border:0;border-radius:24px;background:var(--crema,#F3EBDD);color:var(--ink);font-size:30px;line-height:1}
+.mcal{font-size:14px;font-weight:800;color:var(--soft);text-transform:uppercase;letter-spacing:.08em;margin-right:56px}
+.mcaja h3{font-family:"Fraunces",Georgia,serif;font-size:28px;margin:6px 56px 14px 0;line-height:1.15}
+.mfila{font-size:17px;font-weight:700;margin:6px 0;word-wrap:break-word}
+.mnota{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);font-size:17px;line-height:1.5;word-wrap:break-word}
+.mnota a,.mfila a{color:#2E5E8C;font-weight:800}
+.msin{color:var(--soft)}
+.noche .mcaja{background:#26201B}.noche .mnota a,.noche .mfila a{color:#8FC0EE}
 /* Cabecera: hora grande */
 .cab{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:20px}
 .hora{font-family:"Fraunces",Georgia,serif;font-size:110px;line-height:.9;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
@@ -240,6 +256,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
 <div class="ov" id="ovTiempo"></div>
 <div class="ov" id="ovCal"></div>
 <div class="ov" id="ovAjustes"></div>
+<div class="modal" id="ovEv"></div>
 <div class="ov" id="ovCenas"><div class="ovb"><button class="bbig" data-cerrar="ovCenas">‹ Panel</button><h2 id="tCenas">Cenas</h2><span style="width:110px"></span></div></div>
 
 <script>
@@ -292,6 +309,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     nino:'<circle cx="12" cy="7" r="3.5"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/>',
     luna:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',
     flecha:'<path d="M9 6l6 6-6 6"/>',
+    nota:'<path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 12h7M9 16h5"/>',
     abrigo:'<path d="M8.5 3L12 6l3.5-3L20 7l-2 3.5V21H6V10.5L4 7z"/><path d="M12 6v15M9.5 14h0M14.5 14h0"/>',
     camiseta:'<path d="M8.5 3c.5 1.5 2 2.5 3.5 2.5S15 4.5 15.5 3L21 6.5 18.5 10 17 9v12H7V9l-1.5 1L3 6.5z"/>',
     jersey:'<path d="M8.5 3c.5 1.5 2 2.5 3.5 2.5S15 4.5 15.5 3l4.5 3 1 12h-3L17 10v11H7V10l-1 8H3l1-12z"/><path d="M7 18h10"/>',
@@ -569,7 +587,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
 
   /* ================== CALENDARIO ================== */
   var EVS = lget('panel_evs', null), CALERR = {}, CALN = {}, CALT = null;
-  function revive(list){ return (list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; }); }
+  function revive(list){ return (list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota||'', url:e.url||'', todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; }); }
   var EVENTOS = EVS ? revive(EVS.ev) : [];
 
   // ---- Parser ICS (con repeticiones básicas) ----
@@ -580,6 +598,13 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     return { d:new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6]), todo:false }; // TZID: se asume la zona del aparato
   }
   function icsDur(v){ var m = String(v).match(/P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?/); if(!m) return 0; return ((+m[1]||0)*7*86400 + (+m[2]||0)*86400 + (+m[3]||0)*3600 + (+m[4]||0)*60 + (+m[5]||0))*1000; }
+  // Notas: respeta saltos de línea y quita el HTML que mete Google
+  function nota(v){
+    var t = String(v||'').replace(/\\n/gi,'\n').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\');
+    t = t.replace(/<br\s*\/?>/gi,'\n').replace(/<\/(p|div|li)>/gi,'\n').replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]*)<\/a>/gi, function(m,u,x){ return x && x!==u ? x+' ('+u+')' : u; }).replace(/<[^>]+>/g,'');
+    t = t.replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'");
+    return t.replace(/\n{3,}/g,'\n\n').replace(/^\s+|\s+$/g,'');
+  }
   function txt(v){ return String(v||'').replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\'); }
   var BD = {SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6};
   function parseICS(texto, cal, desde, hasta){
@@ -595,6 +620,8 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       else if(nom==='DURATION') cur.dur = icsDur(v);
       else if(nom==='SUMMARY') cur.titulo = txt(v);
       else if(nom==='LOCATION') cur.lugar = txt(v);
+      else if(nom==='DESCRIPTION') cur.nota = nota(v);
+      else if(nom==='URL') cur.url = v;
       else if(nom==='RRULE') cur.rrule = v;
       else if(nom==='EXDATE') v.split(',').forEach(function(x){ var f = icsFecha(x); if(f) cur.ex.push(+f.d); });
       else if(nom==='RECURRENCE-ID') cur.rid = icsFecha(v);
@@ -607,7 +634,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       var dur = e.fin ? (+e.fin.d - +e.ini.d) : (e.dur || (e.ini.todo ? 86400000 : 3600000));
       var fin = new Date(+ini + dur);
       if(fin < desde || ini > hasta) return;
-      out.push({ cal:cal.nombre, color:cal.color, titulo:e.titulo||'(sin título)', lugar:e.lugar||'', todo:e.ini.todo, ini:ini, fin:fin });
+      out.push({ cal:cal.nombre, color:cal.color, titulo:e.titulo||'(sin título)', lugar:e.lugar||'', nota:e.nota||'', url:e.url||'', todo:e.ini.todo, ini:ini, fin:fin });
     }
     evs.forEach(function(e){
       if(!e.ini || e.estado==='CANCELLED') return;
@@ -687,7 +714,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       if(fallidos.length) acc = acc.concat(EVENTOS.filter(function(e){ return fallidos.indexOf(e.cal)>=0; }));
       acc.sort(function(a,b){ return (a.todo===b.todo ? a.ini-b.ini : (a.todo?-1:1)); });
       EVENTOS = acc; CALT = new Date();
-      lset('panel_evs', { t:Date.now(), ev:acc.map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, todo:e.todo, ini:+e.ini, fin:+e.fin }; }) });
+      lset('panel_evs', { t:Date.now(), ev:acc.map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota, url:e.url, todo:e.todo, ini:+e.ini, fin:+e.fin }; }) });
       pinta(); if($('ovCal').className.indexOf('on')>=0) pintaCal();
       if($('ovAjustes').className.indexOf('on')>=0) abrirAjustes();
     }
@@ -703,9 +730,23 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     var i = e.ini < a ? 'antes' : hhmm(e.ini), f = hhmm(e.fin);
     return i+' – '+f;
   }
+  function evId(e){ var i = EVENTOS.indexOf(e); return i < 0 ? '' : ' data-ev="'+i+'"'; }
   function evHTML(e, d){
-    return '<div class="ev"><div class="bar" style="background:'+esc(e.color)+'"></div><div class="evb"><div class="evh">'+esc(horaEv(e,d))+' · '+esc(e.cal)+'</div>'+
-      '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">'+ic('pin')+esc(e.lugar)+'</div>':'')+'</div></div>';
+    return '<div class="ev"'+evId(e)+'><div class="bar" style="background:'+esc(e.color)+'"></div><div class="evb"><div class="evh">'+esc(horaEv(e,d))+' · '+esc(e.cal)+'</div>'+
+      '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">'+ic('pin')+esc(e.lugar)+'</div>':'')+(e.nota?'<div class="evn">'+ic('nota')+'Ver notas</div>':'')+'</div></div>';
+  }
+  function enlaces(t){ return esc(t).replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\n/g,'<br>'); }
+  function abrirEvento(e){
+    var d = e.ini, f = cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()];
+    var h = e.todo ? 'Todo el día' : hhmm(e.ini)+' – '+hhmm(e.fin);
+    var s = '<div class="mfondo" data-cerrarev="1"></div><div class="mcaja"><div class="mbar" style="background:'+esc(e.color)+'"></div>'+
+      '<button class="mx" data-cerrarev="1" aria-label="Cerrar">×</button>'+
+      '<div class="mcal">'+esc(e.cal)+'</div><h3>'+esc(e.titulo)+'</h3>'+
+      '<div class="mfila">'+ic('calendario')+esc(f)+'</div><div class="mfila">'+ic('reloj')+esc(h)+'</div>'+
+      (e.lugar ? '<div class="mfila">'+ic('pin')+enlaces(e.lugar)+'</div>' : '')+
+      (e.url ? '<div class="mfila">'+ic('flecha')+enlaces(e.url)+'</div>' : '')+
+      '<div class="mnota">'+(e.nota ? enlaces(e.nota) : '<span class="msin">Este evento no tiene notas.</span>')+'</div></div>';
+    $('ovEv').innerHTML = s; $('ovEv').className = 'modal on';
   }
   function fichaCal(){
     var s = '<div class="ftit">'+ic('calendario')+'Hoy</div>';
@@ -753,7 +794,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       for(var j=0;j<7;j++){
         var dj = new Date(l.getFullYear(), l.getMonth(), l.getDate()+j), ej = eventosDe(dj);
         s += '<div class="sc'+(kdia(dj)===hoyk?' hoy':'')+'"><div class="sh"><b>'+DCORTO[dj.getDay()]+'</b><span>'+dj.getDate()+'</span></div>'+
-          (ej.length ? ej.map(function(e){ return '<div class="se" style="background:'+esc(e.color)+'"><div class="h">'+esc(e.todo?'Todo el día':hhmm(e.ini))+'</div><div class="t">'+esc(e.titulo)+'</div></div>'; }).join('') : '<div class="vacio" style="padding:8px 0;font-size:13px">—</div>')+'</div>';
+          (ej.length ? ej.map(function(e){ return '<div class="se"'+evId(e)+' style="background:'+esc(e.color)+'"><div class="h">'+esc(e.todo?'Todo el día':hhmm(e.ini))+'</div><div class="t">'+esc(e.titulo)+'</div></div>'; }).join('') : '<div class="vacio" style="padding:8px 0;font-size:13px">—</div>')+'</div>';
       }
       s += '</div>';
     }
@@ -824,6 +865,9 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       if(t.getAttribute){
         var a;
         if((a = t.getAttribute('data-cerrar'))){ $(a).className = 'ov'; return; }
+        if(t.getAttribute('data-cerrarev')){ $('ovEv').className = 'modal'; return; }
+        if(t.tagName === 'A') return;
+        if((a = t.getAttribute('data-ev'))){ if(EVENTOS[+a]) abrirEvento(EVENTOS[+a]); return; }
         if(t.getAttribute('data-ajustes')){ abrirAjustes(); return; }
         if((a = t.getAttribute('data-abrir'))){ if(a==='tiempo') abrirTiempo(); else if(a==='cenas') abrirCenas(); else abrirCal(); return; }
         if((a = t.getAttribute('data-vcal'))){ VCAL = a; lset('panel_vcal', a); pintaCal(); return; }
