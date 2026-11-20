@@ -446,7 +446,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       '<div class="tmm">↓ '+Math.round(d.temperature_2m_min[0])+'°  ↑ '+Math.round(d.temperature_2m_max[0])+'° · Sensación '+Math.round(cu.apparent_temperature)+'°</div></div></div>';
     s += '<div class="tdesc">'+esc(k.gemini && k.gemini.resumen ? k.gemini.resumen : resumenDia())+'</div>';
     var items = k.gemini && k.gemini.ropa && k.gemini.ropa.length ? k.gemini.ropa : (k.reglas ? k.reglas.items : []);
-    s += '<div class="ropa"><div class="rl">'+ic('nino')+'Para ir al cole</div>'+ropaHTML(items)+
+    s += '<div class="ropa"><div class="rl">'+ic('nino')+(CONSEJO && CONSEJO.tanda==='tarde' ? 'Para ir a buscarle' : 'Para ir al cole')+'</div>'+ropaHTML(items)+
       (k.gemini && k.gemini.consejo ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.gemini.consejo)+'</div>' : (k.reglas ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.reglas.texto)+'</div>' : ''))+'</div>';
     if(k.reglas && k.reglas.avisos.length) s += '<div class="ravisos">'+k.reglas.avisos.map(avisoHTML).join('')+'</div>';
     s += viejo(WXT, 120, 'El tiempo está');

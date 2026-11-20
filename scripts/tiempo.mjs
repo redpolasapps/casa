@@ -1,7 +1,7 @@
 // Cada mañana: descarga la previsión (Open-Meteo, zona aproximada del barrio) y le pide a Gemini
 // un consejo de ropa para un niño de 4 años (ir al cole y volver) y un resumen del día. Escribe tiempo.json.
 // Sin dependencias: Node 20+.  Variables: GEMINI_API_KEY (obligatoria), ENTRADA / SALIDA (opcional, "08:00" / "17:00").
-import { writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 
 const LAT = 41.44, LON = 2.19; // zona aproximada, nunca la dirección
 const ENTRADA = process.env.ENTRADA || "08:00", SALIDA = process.env.SALIDA || "17:00";
@@ -70,12 +70,24 @@ if (w) {
 }
 if (!filas.length) throw new Error("No hay datos por horas para hoy");
 
+// Dos tandas al día: por la mañana (con las cenas) y a media tarde (antes de ir a buscar al peque).
+const HORA = Number(horaMadrid(new Date().toISOString()).slice(0, 2));
+const TANDA = HORA < 12 ? "manana" : "tarde";
+if (process.env.PROGRAMADO === "1") {
+  const ok = TANDA === "manana" ? HORA >= 5 && HORA <= 8 : HORA >= 15 && HORA <= 16;
+  let previo = null; try { previo = JSON.parse(await readFile(new URL("../tiempo.json", import.meta.url), "utf8")); } catch {}
+  if (!ok || (previo && previo.fecha === hoy && previo.tanda === TANDA)) { log(`Nada que hacer (${HORA} h, tanda ${TANDA} ${ok ? "ya hecha" : "fuera de hora"})`); process.exit(0); }
+}
+const ENFOQUE = TANDA === "manana"
+  ? "Decide cómo vestir al niño para ir y volver del cole."
+  : `Ahora es media tarde: el consejo es para IR A BUSCARLE al cole a las ${SALIDA} y el resto de la tarde (parque, vuelta a casa). Olvida la mañana. El resumen, sobre la tarde y la noche.`;
+
 const prompt = `Eres el asistente de una familia de Barcelona. Hoy es ${hoy}. Su hijo tiene 4 años y entra al cole entre las 8:00 y las 9:00 (sale de casa un poco antes) y sale sobre las ${SALIDA}.
 Previsión por horas de hoy (hora local):
 ${filas.join("\n")}
 Resumen: ${resumen}.
 
-Decide cómo vestir al niño para ir y volver del cole. Ten en cuenta la SENSACIÓN TÉRMICA, la LLUVIA y el VIENTO (con rachas de más de 40 km/h hace más frío y conviene cortavientos o capucha; con más de 60 km/h, avisa). Si hay mucha diferencia entre la mañana y la tarde, dilo (por ejemplo, capas que se pueda quitar).
+${ENFOQUE} Ten en cuenta la SENSACIÓN TÉRMICA, la LLUVIA y el VIENTO (con rachas de más de 40 km/h hace más frío y conviene cortavientos o capucha; con más de 60 km/h, avisa). Si hay mucha diferencia entre la mañana y la tarde, dilo (por ejemplo, capas que se pueda quitar).
 Responde SOLO con JSON:
 {"resumen":"1 frase sobre cómo será el día (cielo, temperaturas, lluvia, viento)",
  "ropa":["4 a 7 prendas o accesorios, cada uno empezando por un emoji, p. ej. '🧥 Abrigo', '🧢 Gorro', '☂️ Paraguas'"],
@@ -83,6 +95,6 @@ Responde SOLO con JSON:
 
 const g = await gemini(prompt);
 if (!g || !Array.isArray(g.ropa) || !g.resumen) throw new Error("Respuesta de Gemini no válida");
-const datos = { fecha: hoy, generado: new Date().toISOString(), resumen: String(g.resumen), ropa: g.ropa.slice(0, 8).map(String), consejo: String(g.consejo || "") };
+const datos = { fecha: hoy, tanda: TANDA, generado: new Date().toISOString(), resumen: String(g.resumen), ropa: g.ropa.slice(0, 8).map(String), consejo: String(g.consejo || "") };
 await writeFile(new URL("../tiempo.json", import.meta.url), JSON.stringify(datos, null, 1) + "\n");
 log("OK:", datos.resumen);

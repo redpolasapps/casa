@@ -2,9 +2,10 @@ name: Consejo del tiempo (Gemini)
 
 on:
   schedule:
-    # 04:40 UTC = 05:40 en Madrid en invierno (06:40 en verano). Y un repaso a mediodía para la tarde.
-    - cron: "40 4 * * *"
-    - cron: "0 11 * * *"
+    # Mañana ~5:40 (con las cenas) y tarde ~15:40 (antes de ir a buscar al peque), hora de Madrid.
+    # Va dos veces (invierno/verano); el script solo trabaja una vez por tanda.
+    - cron: "40 3,4 * * *"
+    - cron: "40 13,14 * * *"
   workflow_dispatch:
 
 permissions:
@@ -24,6 +25,7 @@ jobs:
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           NODE_OPTIONS: --dns-result-order=ipv4first
+          PROGRAMADO: ${{ github.event_name == 'schedule' && '1' || '0' }}
         run: node scripts/tiempo.mjs
       - name: Publicar
         env:
