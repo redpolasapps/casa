@@ -31,7 +31,13 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .fin{background:#fff;border-radius:26px;box-shadow:0 2px 0 var(--line),0 10px 30px rgba(80,50,20,.07);padding:20px 20px 18px;height:100%;min-height:440px;cursor:pointer;position:relative;overflow:hidden}
 .fin:active{-webkit-transform:scale(.99);transform:scale(.99)}
 .ftit{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--soft);margin-bottom:10px}
-.mas{position:absolute;right:16px;top:16px;font-size:13px;font-weight:800;color:var(--terra-d);background:var(--crema);border-radius:12px;padding:4px 10px}
+.fin{display:-webkit-flex;display:flex;-webkit-flex-direction:column;flex-direction:column}
+.fbody{-webkit-flex:1;flex:1}
+.cta{margin-top:14px;background:var(--ink);color:#fff;border-radius:16px;padding:15px 16px;font-weight:800;font-size:17px;text-align:center;box-shadow:0 3px 0 rgba(0,0,0,.15)}
+.tw .cta{background:#2E5E8C}
+.cn .cta{background:var(--terra)}
+.ca .cta{background:#3F7A3A}
+.cta span{font-size:22px;vertical-align:-1px;margin-left:6px}
 
 /* Ficha tiempo */
 .tw{background:linear-gradient(160deg,#E7F1FB,#fff 55%)}
@@ -53,9 +59,19 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .cole{font-size:14.5px;line-height:1.4;background:var(--crema);border-radius:14px;padding:10px 12px;margin-bottom:12px}
 .cole b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--terra-d)}
 .cl{list-style:none;margin:0;padding:0}
-.cl li{padding:8px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:15.5px;line-height:1.3}
+.cl li{padding:7px 0;border-bottom:1px solid var(--line);font-weight:800;font-size:15px;line-height:1.25;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
+.th{width:54px;height:54px;border-radius:14px;-webkit-flex:none;flex:none;margin-right:12px;background:#F5EBDD center/cover no-repeat;overflow:hidden;position:relative;box-shadow:0 2px 6px rgba(80,50,20,.12)}
+.th svg{width:54px;height:54px;display:block}
+.th .tb2{position:absolute;right:-2px;bottom:-2px;background:#fff;border-radius:10px;font-size:12px;line-height:20px;width:22px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+.cl .sub{display:block;font-size:12px;font-weight:700;color:var(--soft);margin-top:2px}
+.mosaico{display:-webkit-flex;display:flex;height:92px;border-radius:18px;overflow:hidden;margin:-4px 0 12px}
+.mosaico div{-webkit-flex:1;flex:1;background:#F5EBDD center/cover no-repeat;display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center}
+.mosaico div + div{margin-left:3px}
+.mosaico svg{width:80px;height:80px}
+.mosaico img,.thi img{width:100%;height:100%;object-fit:cover;display:block}
+.thi{display:block;width:100%;height:100%}
 .cl li:last-child{border-bottom:0}
-.cl .em{display:inline-block;width:26px}
+
 
 /* Ficha calendario */
 .ca{background:linear-gradient(160deg,#E9F3E4,#fff 55%)}
@@ -151,6 +167,15 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .crow .del{color:#B23A3A;font-weight:800;padding:8px 10px}
 .colores button{width:40px;height:40px;border-radius:20px;margin:0 8px 8px 0;border:3px solid transparent}
 .colores button.on{border-color:var(--ink)}
+.priv{background:#E9F3E4;color:#2F5E2B;border-radius:14px;padding:12px 14px;font-size:15px;line-height:1.5;margin:10px 0 6px}
+.priv b{color:#1F4A1C}
+.pasos2{margin-top:10px}
+.paso2{border-top:1px solid var(--line);padding:14px 0 6px}
+.pt2{font-family:"Fraunces",Georgia,serif;font-size:19px;font-weight:700;margin-bottom:8px}
+.op{background:var(--bg);border-radius:14px;padding:12px 14px;margin-bottom:10px;font-size:15px;line-height:1.5}
+.op ol{margin:6px 0 4px;padding-left:22px}
+.op li{margin-bottom:3px}
+.nota{display:block;font-size:13.5px;color:var(--soft);margin-top:4px}
 .ayuda{font-size:14.5px;line-height:1.5;color:var(--soft)}
 .ayuda b{color:var(--ink)}
 .estado{font-size:13px;font-weight:800;margin-top:6px}
@@ -293,7 +318,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   }
 
   function fichaTiempo(){
-    var s = '<div class="ftit">🌤️ El tiempo hoy</div><span class="mas">Por horas ›</span>';
+    var s = '<div class="ftit">🌤️ El tiempo hoy</div>';
     if(!WX || !WX.current){ return s+'<div class="vacio">Cargando el tiempo…</div>'; }
     var cu = WX.current, c = wcod(cu.weather_code, !cu.is_day), d = WX.daily, k = consejoHoy();
     s += '<div class="tnow"><div class="ticon">'+c[0]+'</div><div><div class="ttemp">'+Math.round(cu.temperature_2m)+'°</div>'+
@@ -370,6 +395,19 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 
   /* ================== CENAS ================== */
   var CEN = null;
+  (function(){ var sp = document.createElement('script'); sp.src = CENAS + 'platos.js'; sp.onload = function(){ pinta(); }; document.head.appendChild(sp); })();
+  function miniFoto(r, ancho){
+    if(!r.foto) return '';
+    var f = String(r.foto).replace(/([?&])w=[0-9]+/, '$1w='+ancho);
+    // Wikimedia solo sirve tamaños estándar: 330 para miniaturas, 500 para el mosaico
+    return f.replace(/\/(\d+)px-([^\/]+)$/, '/'+(ancho > 300 ? 500 : 330)+'px-$2');
+  }
+  function imgOIlus(r, ancho){
+    var f = miniFoto(r, ancho);
+    if(!f) return ilus(r);
+    return '<img src="'+esc(f)+'" alt="" onerror="this.parentNode.innerHTML=window.ILUS_'+esc(r.id).replace(/[^a-zA-Z0-9]/g,'_')+'||\'\'">';
+  }
+  function ilus(r){ var P = window.PLATOS || {}; return P[r.imagen] || P.generico || ''; }
   function cargaCenas(){
     var sc = document.createElement('script');
     sc.src = CENAS + 'data.js?v=' + Date.now();
@@ -377,15 +415,22 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     document.head.appendChild(sc);
   }
   function fichaCenas(){
-    var s = '<div class="ftit">🍽️ Cenas de hoy</div><span class="mas">Ver recetas ›</span>';
+    var s = '<div class="ftit">🍽️ Cenas de hoy</div>';
     if(!CEN || !CEN.hoy) return s+'<div class="vacio">Cargando cenas…</div>';
     var h = CEN.hoy, hoyk = kdia(new Date());
     if(h.fecha !== hoyk) s += '<div class="cole" style="background:#FFF6DC">⏳ Las cenas de hoy se están preparando. Mientras tanto, las de '+esc(h.fecha)+'.</div>';
     var pl = (h.cole && h.cole.platos) || [];
     if(pl.length) s += '<div class="cole"><b>En el cole ha comido</b>'+esc(pl.slice(0,2).join(' · '))+'</div>';
-    s += '<ul class="cl">'+(h.cenas||[]).map(function(r){
-      var em = r.gourmet ? '✨' : r.healthy ? '💪' : r.peques ? '🧒' : '🍽️';
-      return '<li><span class="em">'+em+'</span>'+esc(r.titulo)+'</li>';
+    var cenas = h.cenas || [];
+    // Mosaico de 3 fotos (o ilustraciones) para dar color
+    var con = cenas.filter(function(r){ return r.foto; }), tres = con.concat(cenas.filter(function(r){ return !r.foto; })).slice(0,3);
+    cenas.forEach(function(r){ window['ILUS_'+String(r.id).replace(/[^a-zA-Z0-9]/g,'_')] = ilus(r); });
+    if(tres.length) s += '<div class="mosaico">'+tres.map(function(r){ return '<div>'+imgOIlus(r, 400)+'</div>'; }).join('')+'</div>';
+    s += '<ul class="cl">'+cenas.map(function(r){
+      var badge = r.gourmet ? '✨' : r.healthy ? '💪' : r.peques ? '🧒' : '';
+      var th = '<span class="th"><span class="thi">'+imgOIlus(r, 160)+'</span>'+(badge ? '<span class="tb2">'+badge+'</span>' : '')+'</span>';
+      var sub = [r.cocina, r.tiempo ? r.tiempo+' min' : ''].filter(function(x){return x;}).join(' · ');
+      return '<li>'+th+'<span>'+esc(r.titulo)+(sub?'<span class="sub">'+esc(sub)+'</span>':'')+'</span></li>';
     }).join('')+'</ul>';
     return s;
   }
@@ -536,7 +581,7 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
       '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">📍 '+esc(e.lugar)+'</div>':'')+'</div></div>';
   }
   function fichaCal(){
-    var s = '<div class="ftit">📅 Hoy</div><span class="mas">Ver mes ›</span>';
+    var s = '<div class="ftit">📅 Hoy</div>';
     if(!(CFG.calendarios||[]).length) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">⚙️ Configurar calendarios</button></div>';
     var errs = (CFG.calendarios||[]).filter(function(c){ return CALERR[c.url]; });
     if(errs.length) s += errs.map(function(c){ return '<div class="aviso" style="background:#FBE4E4;color:#9B2C2C;margin:0 0 8px">⚠️ '+esc(c.nombre)+': '+esc(CALERR[c.url])+'</div>'; }).join('');
@@ -594,17 +639,31 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
   var NUEVO = { color: PALETA[0] };
   function abrirAjustes(){
     var s = '<div class="ovb"><button class="bbig" data-cerrar="ovAjustes">‹ Panel</button><h2>⚙️ Ajustes</h2><span style="width:110px"></span></div><div class="ovc">';
-    s += '<div class="form"><h3>📅 Calendarios</h3>'+
+    s += '<div class="form"><h3>📅 Tus calendarios</h3>'+
+      '<div class="priv">🔒 <b>Privado:</b> los calendarios que añadas se guardan <b>solo en este aparato</b>. No se publican en la web ni se comparten con nadie: otras personas que abran el panel no los ven. '+
+      'Para poder leerlos, el panel los descarga a través de un pequeño intermediario que solo los reenvía y no guarda nada.</div>'+
       ((CFG.calendarios||[]).length ? CFG.calendarios.map(function(c,i){ return '<div class="crow"><span class="cc" style="background:'+esc(c.color)+'"></span><div class="cn2">'+esc(c.nombre)+
         '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado" style="color:#B23A3A">⚠️ '+esc(CALERR[c.url])+'</div>':(CALN[c.url]?'<div class="estado" style="color:#3F7A3A">✅ Leído: '+CALN[c.url].ev+' eventos en el calendario, '+CALN[c.url].vis+' en los próximos meses</div>':'<div class="estado" style="color:#7A6F64">Cargando…</div>'))+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
-        : '<div class="ayuda">Todavía no hay calendarios.</div>')+
-      '<label>Nombre</label><input id="cNom" placeholder="Familia, Trabajo, Cole…" value="'+esc(NUEVO.nombre||'')+'">'+
-      '<label>Enlace del calendario (.ics)</label><input id="cUrl" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics" value="'+esc(NUEVO.url||'')+'" autocapitalize="off" autocorrect="off">'+
-      '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NUEVO.color===p?'on':'')+'" data-color="'+p+'"></button>'; }).join('')+'</div>'+
-      '<button class="boton" data-addcal="1">➕ Añadir calendario</button>'+
-      '<div class="ayuda" style="margin-top:14px"><b>Google Calendar:</b> en la web de Google Calendar → ⚙️ Configuración → elige el calendario → copia la <b>"Dirección secreta en formato iCal"</b>.<br>'+
-      '<b>iPhone / iPad (iCloud):</b> en la app Calendario → "Calendarios" → ⓘ junto al calendario → activa <b>"Calendario público"</b> y copia el enlace.<br>'+
-      'Los enlaces se guardan <b>solo en este aparato</b>.</div></div>';
+        : '<div class="ayuda" style="margin:10px 0">Todavía no has añadido ningún calendario.</div>')+'</div>';
+    s += '<div class="form"><h3>➕ Añadir un calendario</h3>'+
+      '<div class="ayuda">El panel no puede leer directamente el calendario del iPad o del móvil (Apple y Google no lo permiten a las webs). '+
+      'Lo que se hace es copiar un <b>enlace especial</b> de tu calendario y pegarlo aquí. Se hace una sola vez por calendario.</div>'+
+      '<div class="pasos2"><div class="paso2"><div class="pt2">1 · Copia el enlace de tu calendario</div>'+
+        '<div class="op"><b>📗 Si es de Google Calendar</b> (mejor desde un ordenador):<ol>'+
+          '<li>Entra en <b>calendar.google.com</b>.</li><li>Pulsa la rueda <b>⚙️</b> (arriba a la derecha) → <b>Configuración</b>.</li>'+
+          '<li>A la izquierda, en <b>"Configuración de mis calendarios"</b>, pulsa el calendario que quieras.</li>'+
+          '<li>Baja hasta <b>"Integrar el calendario"</b> y copia la <b>"Dirección secreta en formato iCal"</b> (termina en <b>basic.ics</b>).</li></ol>'+
+          '<span class="nota">Es secreta: no la compartas con nadie. Para pasarla al iPad, puedes enviártela en una nota o con AirDrop.</span></div>'+
+        '<div class="op"><b>🍎 Si es del calendario del iPhone/iPad (iCloud)</b>:<ol>'+
+          '<li>Abre la app <b>Calendario</b> → <b>Calendarios</b> (abajo).</li><li>Pulsa la <b>ⓘ</b> junto al calendario.</li>'+
+          '<li>Activa <b>"Calendario público"</b> y pulsa <b>"Compartir enlace"</b> → <b>Copiar</b>.</li></ol>'+
+          '<span class="nota">Ojo: con iCloud, cualquiera que tenga ese enlace podría ver ese calendario. El de Google es más privado.</span></div></div>'+
+      '<div class="paso2"><div class="pt2">2 · Pégalo aquí, ponle un nombre y un color</div>'+
+      '<label>Nombre (cómo quieres que se vea)</label><input id="cNom" placeholder="Familia, Trabajo, Cole…" value="'+esc(NUEVO.nombre||'')+'">'+
+      '<label>Enlace del calendario</label><input id="cUrl" placeholder="Pega aquí el enlace (https://… o webcal://…)" value="'+esc(NUEVO.url||'')+'" autocapitalize="off" autocorrect="off">'+
+      '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NUEVO.color===p?'on':'')+'" data-color="'+p+'"></button>'; }).join('')+'</div></div>'+
+      '<div class="paso2"><div class="pt2">3 · Pulsa añadir</div><button class="boton" data-addcal="1">➕ Añadir calendario</button>'+
+      '<div class="ayuda" style="margin-top:8px">En unos segundos verás arriba <b>"✅ Leído"</b> y sus eventos aparecerán en el panel, con su color. Se actualizan solos cada 15 minutos.</div></div></div></div>';
     s += '<div class="form"><h3>👦 Horario del cole</h3><div class="ayuda">Para el consejo de ropa: se mira el tiempo a la hora de ir y de volver.</div><div class="dos"><div><label>Entrada</label><input id="cEnt" type="time" value="'+esc(CFG.entrada)+'"></div><div><label>Salida</label><input id="cSal" type="time" value="'+esc(CFG.salida)+'"></div></div>'+
       '<button class="boton" data-savehoras="1">Guardar</button></div></div>';
     $('ovAjustes').innerHTML = s; $('ovAjustes').className = 'ov on';
@@ -617,9 +676,9 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
     var saludo = h < 6 ? 'Buenas noches' : h < 13 ? 'Buenos días' : h < 21 ? 'Buenas tardes' : 'Buenas noches';
     var s = '<div class="cab"><div><div class="saludo">'+saludo+'</div><div class="hora" id="hora">'+hhmm(d)+'</div><div class="fecha">'+cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()]+'</div></div>'+
       '<div class="cabd"><button class="ajustes" data-ajustes="1">⚙️</button></div></div>';
-    s += '<div class="fichas"><div class="ficha"><div class="fin tw" data-abrir="tiempo">'+fichaTiempo()+'</div></div>'+
-      '<div class="ficha"><div class="fin cn" data-abrir="cenas">'+fichaCenas()+'</div></div>'+
-      '<div class="ficha"><div class="fin ca" data-abrir="cal">'+fichaCal()+'</div></div></div>';
+    s += '<div class="fichas"><div class="ficha"><div class="fin tw" data-abrir="tiempo"><div class="fbody">'+fichaTiempo()+'</div><div class="cta">🕒 Ver el tiempo por horas<span>›</span></div></div></div>'+
+      '<div class="ficha"><div class="fin cn" data-abrir="cenas"><div class="fbody">'+fichaCenas()+'</div><div class="cta">👩‍🍳 Ver las recetas<span>›</span></div></div></div>'+
+      '<div class="ficha"><div class="fin ca" data-abrir="cal"><div class="fbody">'+fichaCal()+'</div><div class="cta">🗓️ Ver el mes y la semana<span>›</span></div></div></div></div>';
     $('app').innerHTML = s;
   }
 
