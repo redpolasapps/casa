@@ -1,13 +1,15 @@
 {
- "fecha": "2026-11-20",
- "tanda": "tarde",
- "generado": "2026-11-20T12:05:22.468Z",
- "resumen": "Tarde agradable y sin lluvia, con temperaturas suaves que rondan los 17 grados y viento ya en calma.",
+ "fecha": "2026-11-21",
+ "tanda": "manana",
+ "sinCole": true,
+ "generado": "2026-11-20T23:24:18.791Z",
+ "resumen": "Será un día suave y nublado, con temperaturas agradables que alcanzarán los 18°C, viento moderado por la tarde y probabilidad casi nula de lluvia.",
  "ropa": [
-  "Jersey fino",
+  "Camiseta de manga larga",
+  "Sudadera o jersey",
+  "Chaqueta ligera",
   "Pantalón largo",
-  "Zapatillas cerradas",
-  "Chaqueta ligera"
+  "Zapatillas de deporte"
  ],
- "consejo": "A la salida del cole y para ir al parque ya no hace tanto viento como por la mañana, con una chaqueta ligera estará perfecto."
+ "consejo": "Lo ideal es vestirlo por capas: empezará fresco por la mañana en el parque y por la tarde convendrá tener la chaqueta a mano cuando empiece a correr más brisa."
 }
