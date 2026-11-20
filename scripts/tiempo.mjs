@@ -2,12 +2,16 @@
 // un consejo de ropa para un niño de 4 años (ir al cole y volver) y un resumen del día. Escribe tiempo.json.
 // Sin dependencias: Node 20+.  Variables: GEMINI_API_KEY (obligatoria), ENTRADA / SALIDA (opcional, "08:00" / "17:00").
 import { readFile, writeFile } from "node:fs/promises";
+import vm from "node:vm";
 
-const LAT = 41.44, LON = 2.19; // zona aproximada, nunca la dirección
-const ENTRADA = process.env.ENTRADA || "08:00", SALIDA = process.env.SALIDA || "17:00";
+// Todo lo propio de cada casa está en config.js (el mismo archivo que usa el panel)
+const CFG = await (async () => { try { const ctx = { window: {} }; vm.createContext(ctx); vm.runInContext(await readFile(new URL("../config.js", import.meta.url), "utf8"), ctx); return ctx.window.CONFIG || {}; } catch { return {}; } })();
+const LAT = CFG.lat ?? 41.44, LON = CFG.lon ?? 2.19; // zona aproximada, nunca la dirección
+const ZONA = CFG.zona || "Europe/Madrid", CIUDAD = CFG.ciudad || "Barcelona", EDAD = CFG.edad || 4;
+const ENTRADA = CFG.entrada || "08:00", ENTRADA_HASTA = CFG.entradaHasta || ENTRADA, SALIDA = CFG.salida || "17:00";
 const MODELOS = [process.env.GEMINI_MODEL || "gemini-flash-latest", "gemini-2.5-flash", "gemini-flash-lite-latest"];
 const log = (...a) => console.log("[tiempo]", ...a);
-const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid" }).format(new Date());
+const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: ZONA }).format(new Date());
 const aMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + (m || 0); };
 
 async function gemini(prompt) {
@@ -30,7 +34,7 @@ async function gemini(prompt) {
   throw err;
 }
 
-const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max,uv_index_max&timezone=Europe%2FMadrid&forecast_days=1`;
+const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max,uv_index_max&timezone=${encodeURIComponent(ZONA)}&forecast_days=1`;
 async function bajar(u, opts = {}, intentos = 2) {
   for (let i = 1; i <= intentos; i++) {
     try { const r = await fetch(u, { ...opts, signal: AbortSignal.timeout(20000) }); if (r.ok) return await r.json(); log("HTTP", r.status, u.slice(0, 40)); }
@@ -39,8 +43,8 @@ async function bajar(u, opts = {}, intentos = 2) {
   }
   return null;
 }
-const horaMadrid = (iso) => new Intl.DateTimeFormat("en-GB", { timeZone: "Europe/Madrid", hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
-const diaMadrid = (iso) => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Madrid" }).format(new Date(iso));
+const horaMadrid = (iso) => new Intl.DateTimeFormat("en-GB", { timeZone: ZONA, hour: "2-digit", minute: "2-digit", hourCycle: "h23" }).format(new Date(iso));
+const diaMadrid = (iso) => new Intl.DateTimeFormat("en-CA", { timeZone: ZONA }).format(new Date(iso));
 
 // 1) Open-Meteo; 2) si no responde desde GitHub, MET Norway (api.met.no)
 let filas = [], resumen = "";
@@ -82,7 +86,7 @@ const ENFOQUE = TANDA === "manana"
   ? "Decide cómo vestir al niño para ir y volver del cole."
   : `Ahora es media tarde: el consejo es para IR A BUSCARLE al cole a las ${SALIDA} y el resto de la tarde (parque, vuelta a casa). Olvida la mañana. El resumen, sobre la tarde y la noche.`;
 
-const prompt = `Eres el asistente de una familia de Barcelona. Hoy es ${hoy}. Su hijo tiene 4 años y entra al cole entre las 8:00 y las 9:00 (sale de casa un poco antes) y sale sobre las ${SALIDA}.
+const prompt = `Eres el asistente de una familia de ${CIUDAD}. Hoy es ${hoy}. Su hijo tiene ${EDAD} años y entra al cole entre las ${ENTRADA} y las ${ENTRADA_HASTA} (sale de casa un poco antes) y sale sobre las ${SALIDA}.
 Previsión por horas de hoy (hora local):
 ${filas.join("\n")}
 Resumen: ${resumen}.
