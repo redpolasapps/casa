@@ -1,0 +1,38 @@
+name: Consejo del tiempo (Gemini)
+
+on:
+  schedule:
+    # 04:40 UTC = 05:40 en Madrid en invierno (06:40 en verano). Y un repaso a mediodía para la tarde.
+    - cron: "40 4 * * *"
+    - cron: "0 11 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+jobs:
+  tiempo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Pedir el consejo a Gemini
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: node scripts/tiempo.mjs
+      - name: Publicar
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "gemini-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add tiempo.json
+          if git diff --cached --quiet; then echo "Sin cambios"; exit 0; fi
+          git commit -m "Tiempo $(date +%F)"
+          git pull --rebase origin main
+          git push origin HEAD:main
+          gh api -X POST "repos/${GITHUB_REPOSITORY}/pages/builds" || true

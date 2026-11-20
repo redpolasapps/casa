@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Casa</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Casa">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF6EE;--card:#fff;--ink:#2E2A26;--soft:#7A6F64;--line:#EDE4D6;--terra:#D9735A;--terra-d:#B85A43;--crema:#F5EBDD;--azul:#3E7CB1;--verde:#5E9452}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:"Nunito",-apple-system,"Helvetica Neue",Arial,sans-serif;-webkit-text-size-adjust:100%}
+h1,h2,h3{font-family:"Fraunces",Georgia,serif;margin:0;font-weight:700}
+button,input,select{font-family:inherit}
+button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 24px 30px}
+
+/* Cabecera: hora grande */
+.cab{display:-webkit-flex;display:flex;-webkit-align-items:flex-end;align-items:flex-end;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:20px}
+.hora{font-family:"Fraunces",Georgia,serif;font-size:110px;line-height:.9;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.fecha{font-size:30px;font-family:"Fraunces",Georgia,serif;font-weight:700;margin-top:8px;text-transform:none}
+.saludo{font-size:16px;color:var(--soft);font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.cabd{text-align:right}
+.ajustes{width:52px;height:52px;border-radius:26px;background:#fff;box-shadow:0 2px 0 var(--line);font-size:24px}
+
+/* Fichas */
+.fichas{display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;margin:0 -9px}
+.ficha{width:33.333%;padding:0 9px 18px}
+.fin{background:#fff;border-radius:26px;box-shadow:0 2px 0 var(--line),0 10px 30px rgba(80,50,20,.07);padding:20px 20px 18px;height:100%;min-height:440px;cursor:pointer;position:relative;overflow:hidden}
+.fin:active{-webkit-transform:scale(.99);transform:scale(.99)}
+.ftit{font-size:13px;text-transform:uppercase;letter-spacing:.1em;font-weight:800;color:var(--soft);margin-bottom:10px}
+.mas{position:absolute;right:16px;top:16px;font-size:13px;font-weight:800;color:var(--terra-d);background:var(--crema);border-radius:12px;padding:4px 10px}
+
+/* Ficha tiempo */
+.tw{background:linear-gradient(160deg,#E7F1FB,#fff 55%)}
+.tnow{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
+.ticon{font-size:64px;line-height:1;margin-right:12px}
+.ttemp{font-family:"Fraunces",Georgia,serif;font-size:58px;font-weight:700;line-height:1}
+.tmm{font-size:15px;color:var(--soft);font-weight:800;margin-top:4px}
+.tdesc{font-size:16px;font-weight:700;margin:10px 0 12px;line-height:1.35}
+.ropa{background:#FFF6DC;border-radius:18px;padding:12px 14px;margin-top:6px}
+.ropa .rl{font-size:12px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:#8A6400;margin-bottom:6px}
+.rit{display:inline-block;background:#fff;border-radius:14px;padding:5px 10px;margin:0 6px 6px 0;font-weight:800;font-size:14px}
+.ravisos{margin-top:8px}
+.aviso{display:block;background:#E3EEF9;color:#245A86;border-radius:12px;padding:7px 10px;font-weight:800;font-size:14px;margin-top:6px}
+.aviso.v{background:#ECE6F7;color:#56398A}
+.aviso.s{background:#FDEBD3;color:#8A4B00}
+
+/* Ficha cenas */
+.cn{background:linear-gradient(160deg,#FCE6DC,#fff 55%)}
+.cole{font-size:14.5px;line-height:1.4;background:var(--crema);border-radius:14px;padding:10px 12px;margin-bottom:12px}
+.cole b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--terra-d)}
+.cl{list-style:none;margin:0;padding:0}
+.cl li{padding:8px 0;border-bottom:1px solid var(--line);font-weight:700;font-size:15.5px;line-height:1.3}
+.cl li:last-child{border-bottom:0}
+.cl .em{display:inline-block;width:26px}
+
+/* Ficha calendario */
+.ca{background:linear-gradient(160deg,#E9F3E4,#fff 55%)}
+.ev{display:-webkit-flex;display:flex;-webkit-align-items:stretch;align-items:stretch;margin-bottom:8px;background:#fff;border-radius:14px;box-shadow:0 1px 0 var(--line);overflow:hidden}
+.ev .bar{width:7px;-webkit-flex:none;flex:none}
+.ev .evb{padding:8px 12px;min-width:0}
+.ev .evh{font-size:13px;font-weight:800;color:var(--soft)}
+.ev .evt{font-size:16px;font-weight:800;line-height:1.25;overflow:hidden;text-overflow:ellipsis}
+.ev .evl{font-size:12.5px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vacio{color:var(--soft);font-size:16px;line-height:1.5;padding:18px 4px;text-align:center}
+.boton{display:inline-block;background:var(--terra);color:#fff;font-weight:800;font-size:16px;padding:12px 18px;border-radius:14px;margin-top:8px}
+.manana{font-size:13.5px;color:var(--soft);font-weight:800;margin-top:10px}
+
+/* Superposiciones */
+.ov{position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:20;display:none;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.ov.on{display:block}
+.ovb{position:-webkit-sticky;position:sticky;top:0;z-index:3;background:rgba(251,246,238,.96);border-bottom:1px solid var(--line);display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;padding:12px 20px}
+.ovb h2{font-size:24px}
+.bbig{background:#fff;box-shadow:0 2px 0 var(--line),0 4px 14px rgba(80,50,20,.08);border-radius:16px;padding:13px 20px;font-size:18px;font-weight:800;color:var(--terra-d)}
+.ovc{max-width:1100px;margin:0 auto;padding:18px 20px 40px}
+#ovCenas{overflow:hidden}
+#ovCenas iframe{position:absolute;top:73px;left:0;width:100%;height:-webkit-calc(100% - 73px);height:calc(100% - 73px);border:0;background:var(--bg)}
+
+/* Detalle tiempo */
+.thero{background:linear-gradient(160deg,#DCEBF8,#F7FBFF);border-radius:26px;padding:22px;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;-webkit-align-items:center;align-items:center}
+.thero .ticon{font-size:90px}
+.thero .ttemp{font-size:76px}
+.tbloq{display:-webkit-flex;display:flex;margin:16px -6px}
+.tb{-webkit-flex:1;flex:1;margin:0 6px;background:#fff;border-radius:20px;padding:14px;box-shadow:0 2px 0 var(--line);text-align:center}
+.tb .n{font-size:13px;text-transform:uppercase;letter-spacing:.08em;font-weight:800;color:var(--soft)}
+.tb .i{font-size:40px;margin:6px 0}
+.tb .t{font-family:"Fraunces",Georgia,serif;font-size:26px;font-weight:700}
+.tb .x{font-size:13.5px;color:var(--soft);font-weight:700;margin-top:4px}
+.grafica{background:#fff;border-radius:22px;padding:14px 10px 10px;box-shadow:0 2px 0 var(--line);overflow-x:auto;-webkit-overflow-scrolling:touch;margin-top:6px}
+.grafica svg{display:block}
+.horas{white-space:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:10px 0 6px}
+.hc{display:inline-block;width:86px;margin-right:8px;background:#fff;border-radius:18px;padding:10px 6px;text-align:center;box-shadow:0 2px 0 var(--line);vertical-align:top}
+.hc.ahora{background:#2E5E8C;color:#fff}
+.hc .hh{font-size:14px;font-weight:800;opacity:.8}
+.hc .hi{font-size:30px;margin:4px 0}
+.hc .ht{font-family:"Fraunces",Georgia,serif;font-size:22px;font-weight:700}
+.hc .hs{font-size:11.5px;font-weight:800;margin-top:3px;opacity:.85}
+.leyg{font-size:13px;color:var(--soft);font-weight:700;margin:6px 4px}
+.leyg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin:0 5px 0 12px;vertical-align:-1px}
+.sec{font-size:21px;margin:22px 0 10px}
+.dtxt{background:#fff;border-radius:20px;padding:16px 18px;box-shadow:0 2px 0 var(--line);font-size:17px;line-height:1.5}
+
+/* Calendario grande */
+.calbar{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:14px}
+.seg{background:#fff;border-radius:16px;box-shadow:0 2px 0 var(--line);display:inline-block;padding:4px}
+.seg button{padding:10px 18px;border-radius:12px;font-weight:800;font-size:16px;color:var(--soft)}
+.seg button.on{background:var(--terra);color:#fff}
+.nav{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center}
+.nb{width:46px;height:46px;border-radius:23px;background:#fff;box-shadow:0 2px 0 var(--line);font-size:24px;font-weight:800;color:var(--terra-d)}
+.nt{font-family:"Fraunces",Georgia,serif;font-size:24px;font-weight:700;min-width:240px;text-align:center}
+.hoyb{margin-left:10px;background:var(--crema);border-radius:14px;padding:10px 14px;font-weight:800;color:var(--terra-d)}
+.mes{background:#fff;border-radius:22px;padding:8px;box-shadow:0 2px 0 var(--line)}
+.mrow{display:-webkit-flex;display:flex}
+.mrow>div{-webkit-flex:1 1 0;flex:1 1 0;min-width:0;margin:3px}
+.mhd>div{text-align:center;font-size:12.5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--terra-d);padding:6px 0}
+.md{background:var(--bg);border-radius:12px;min-height:96px;padding:6px;cursor:pointer}
+.md.fuera{opacity:.35}
+.md.hoy{background:#FCE6DC;box-shadow:inset 0 0 0 3px var(--terra)}
+.md.sel{box-shadow:inset 0 0 0 3px var(--azul)}
+.md .dn{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:17px;margin-bottom:3px}
+.chip{display:block;font-size:11.5px;font-weight:800;color:#fff;border-radius:6px;padding:2px 5px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.mob{display:none}
+.chip.d{background:none;color:var(--ink);padding-left:0}
+.chip.d i{display:inline-block;width:8px;height:8px;border-radius:4px;margin-right:4px;vertical-align:0}
+.masn{font-size:11.5px;font-weight:800;color:var(--soft)}
+.dia{margin-top:16px}
+.sem{display:-webkit-flex;display:flex;margin:0 -4px}
+.sc{-webkit-flex:1 1 0;flex:1 1 0;min-width:0;margin:0 4px;background:#fff;border-radius:18px;padding:10px 8px;box-shadow:0 2px 0 var(--line);min-height:380px}
+.sc.hoy{box-shadow:inset 0 0 0 3px var(--terra)}
+.sc .sh{text-align:center;margin-bottom:8px}
+.sc .sh b{display:block;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--terra-d)}
+.sc .sh span{font-family:"Fraunces",Georgia,serif;font-size:26px;font-weight:700}
+.se{border-radius:10px;padding:6px 7px;margin-bottom:6px;color:#fff}
+.se .h{font-size:11.5px;font-weight:800;opacity:.9}
+.se .t{font-size:13.5px;font-weight:800;line-height:1.2}
+.leyc{margin:12px 2px 0}
+.leyc span{display:inline-block;font-weight:800;font-size:14px;margin:0 14px 6px 0}
+.leyc i{display:inline-block;width:12px;height:12px;border-radius:6px;margin-right:6px;vertical-align:-1px}
+
+/* Ajustes */
+.form{background:#fff;border-radius:22px;padding:18px;box-shadow:0 2px 0 var(--line);margin-bottom:16px}
+.form label{display:block;font-weight:800;font-size:14px;color:var(--soft);margin:10px 0 6px}
+.form input,.form select{width:100%;font-size:17px;padding:12px 14px;border-radius:12px;border:2px solid var(--line);background:#fff;-webkit-appearance:none}
+.crow{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.crow .cc{width:22px;height:22px;border-radius:11px;margin-right:12px;-webkit-flex:none;flex:none}
+.crow .cn2{-webkit-flex:1;flex:1;font-weight:800;min-width:0}
+.crow .cu{font-size:12px;color:var(--soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600}
+.crow .del{color:#B23A3A;font-weight:800;padding:8px 10px}
+.colores button{width:40px;height:40px;border-radius:20px;margin:0 8px 8px 0;border:3px solid transparent}
+.colores button.on{border-color:var(--ink)}
+.ayuda{font-size:14.5px;line-height:1.5;color:var(--soft)}
+.ayuda b{color:var(--ink)}
+.estado{font-size:13px;font-weight:800;margin-top:6px}
+.dos{display:-webkit-flex;display:flex;margin:0 -6px}.dos>div{-webkit-flex:1;flex:1;margin:0 6px}
+
+@media (max-width:900px){
+  .ficha{width:100%}
+  .fin{min-height:0}
+  .hora{font-size:84px}
+  .fecha{font-size:24px}
+}
+@media (max-width:600px){
+  .wrap{padding:14px 12px 24px}
+  .hora{font-size:64px}.fecha{font-size:20px}
+  .tbloq{display:block}.tb{margin:0 6px 10px}
+  .nt{min-width:150px;font-size:19px}
+  .md{min-height:58px;padding:4px}.chip{display:none}.chip.mob{display:block;height:6px;padding:0;margin-bottom:2px}
+  .masn{display:none}
+  .sem{display:block}.sc{min-height:0;margin:0 4px 8px}
+  .seg button{padding:9px 12px;font-size:15px}
+  #ovCenas iframe{top:69px;height:-webkit-calc(100% - 69px);height:calc(100% - 69px)}
+}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<div class="ov" id="ovTiempo"></div>
+<div class="ov" id="ovCal"></div>
+<div class="ov" id="ovAjustes"></div>
+<div class="ov" id="ovCenas"><div class="ovb"><button class="bbig" data-cerrar="ovCenas">‹ Panel</button><h2>🍽️ Cenas</h2><span style="width:110px"></span></div></div>
+
+<script>
+(function(){
+  /* ================== Configuración ================== */
+  // Zona aproximada (barrio), nunca la dirección.
+  var LAT = 41.44, LON = 2.19;
+  var CENAS = '/cenas/';               // la app de cenas (misma web)
+  var DIAS = ['domingo','lunes','martes','miércoles','jueves','viernes','sábado'];
+  var DCORTO = ['dom','lun','mar','mié','jue','vie','sáb'];
+  var MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+  var PALETA = ['#D9735A','#3E7CB1','#5E9452','#8E5BB5','#E0A526','#D2547E','#2A9D8F','#6D6A63'];
+
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s == null ? '' : s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function lget(k, d){ try{ var v = localStorage.getItem(k); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+  function lset(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} }
+  function pad(n){ return (n<10?'0':'')+n; }
+  function hhmm(d){ return d.getHours()+':'+pad(d.getMinutes()); }
+  function kdia(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+  function cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  function xhr(url, ok, ko){
+    try{
+      var x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = 20000;
+      x.onreadystatechange = function(){ if(x.readyState!==4) return; if(x.status>=200 && x.status<300) ok(x.responseText); else if(ko) ko(x.status); };
+      x.ontimeout = function(){ if(ko) ko('timeout'); };
+      x.send();
+    }catch(e){ if(ko) ko(e.message); }
+  }
+  // Safari antiguo interpreta mal "2026-11-20T08:00": lo parseamos a mano como hora local.
+  function fechaLocal(s){ var m = String(s).match(/(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/); return new Date(+m[1], +m[2]-1, +m[3], m[4]?+m[4]:0, m[5]?+m[5]:0); }
+
+  var CFG = lget('panel_cfg', { worker:'', calendarios:[], entrada:'08:00', salida:'16:30' });
+
+  /* ================== TIEMPO ================== */
+  var WX = null, CONSEJO = null;
+  var COD = {0:['☀️','Despejado'],1:['🌤️','Casi despejado'],2:['⛅','Nubes y claros'],3:['☁️','Nublado'],45:['🌫️','Niebla'],48:['🌫️','Niebla'],
+    51:['🌦️','Llovizna débil'],53:['🌦️','Llovizna'],55:['🌧️','Llovizna intensa'],56:['🌧️','Llovizna helada'],57:['🌧️','Llovizna helada'],
+    61:['🌦️','Lluvia débil'],63:['🌧️','Lluvia'],65:['🌧️','Lluvia fuerte'],66:['🌧️','Lluvia helada'],67:['🌧️','Lluvia helada'],
+    71:['🌨️','Nieve débil'],73:['🌨️','Nieve'],75:['❄️','Nieve fuerte'],77:['🌨️','Granizo fino'],80:['🌦️','Chubascos'],81:['🌧️','Chubascos'],82:['⛈️','Chubascos fuertes'],
+    85:['🌨️','Chubascos de nieve'],86:['❄️','Nieve fuerte'],95:['⛈️','Tormenta'],96:['⛈️','Tormenta con granizo'],99:['⛈️','Tormenta con granizo']};
+  function wcod(c, noche){ var r = COD[c] || ['🌡️','—']; if(noche && (c===0||c===1)) return ['🌙', r[1]]; if(noche && c===2) return ['☁️', r[1]]; return r; }
+
+  function cargaTiempo(){
+    var url = 'https://api.open-meteo.com/v1/forecast?latitude='+LAT+'&longitude='+LON+
+      '&hourly=temperature_2m,apparent_temperature,precipitation_probability,precipitation,weather_code,wind_speed_10m,wind_gusts_10m,uv_index,is_day'+
+      '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max,uv_index_max,sunrise,sunset'+
+      '&current=temperature_2m,apparent_temperature,weather_code,wind_speed_10m,wind_gusts_10m,is_day&timezone=Europe%2FMadrid&forecast_days=3';
+    xhr(url, function(t){ try{ WX = JSON.parse(t); lset('panel_wx', {t:Date.now(), d:WX}); }catch(e){} pinta(); }, function(){ var c=lget('panel_wx',null); if(c){ WX=c.d; pinta(); } });
+    xhr('tiempo.json?v='+Date.now(), function(t){ try{ CONSEJO = JSON.parse(t); }catch(e){} pinta(); });
+  }
+
+  // Horas de hoy como objetos cómodos
+  function horas(dia){
+    if(!WX || !WX.hourly) return [];
+    var h = WX.hourly, out = [], k = dia || kdia(new Date());
+    for(var i=0;i<h.time.length;i++){
+      if(h.time[i].slice(0,10)!==k) continue;
+      out.push({ d:fechaLocal(h.time[i]), t:h.temperature_2m[i], s:h.apparent_temperature[i], p:h.precipitation_probability[i]||0, mm:h.precipitation[i]||0,
+        c:h.weather_code[i], v:h.wind_speed_10m[i]||0, r:h.wind_gusts_10m[i]||0, uv:h.uv_index[i]||0, dia:h.is_day[i] });
+    }
+    return out;
+  }
+  function franja(hs, desde, hasta){ return hs.filter(function(x){ var m=x.d.getHours()*60+x.d.getMinutes(); return m>=desde && m<=hasta; }); }
+  function min(a,f){ var m=null; a.forEach(function(x){ var v=f(x); if(m===null||v<m) m=v; }); return m; }
+  function max(a,f){ var m=null; a.forEach(function(x){ var v=f(x); if(m===null||v>m) m=v; }); return m; }
+  function aMin(t){ var p=String(t||'08:00').split(':'); return (+p[0])*60+(+p[1]||0); }
+
+  // Consejo de ropa por reglas (si Gemini no ha escrito el suyo): sensación térmica, lluvia y VIENTO.
+  function ropaReglas(hs){
+    var e = aMin(CFG.entrada), s = aMin(CFG.salida);
+    var man = franja(hs, e-60, e+60), tar = franja(hs, s-30, s+90);
+    var todo = man.concat(tar); if(!todo.length) todo = hs;
+    if(!todo.length) return null;
+    var st = min(todo, function(x){return x.s;}), p = max(todo, function(x){return x.p;}), r = max(todo, function(x){return x.r;}), uv = max(hs, function(x){return x.uv;});
+    var it = [], abrigo = st < 14;
+    if(st < 5) it = ['🧥 Abrigo gordo','🧣 Bufanda','🧤 Guantes','🧢 Gorro'];
+    else if(st < 10) it = ['🧥 Abrigo','🧢 Gorro','👕 Manga larga'];
+    else if(st < 14) it = ['🧥 Chaqueta de abrigo','👕 Manga larga'];
+    else if(st < 18) it = ['🧶 Sudadera o chaqueta fina','👖 Pantalón largo'];
+    else if(st < 23) it = ['👕 Manga larga ligera','🧶 Rebeca por si acaso'];
+    else it = ['👕 Manga corta','🩳 Pantalón corto','🧢 Gorra'];
+    var av = [];
+    if(p >= 50) { it.push(abrigo ? '👢 Botas de agua' : '🧥 Chubasquero', '☂️ Paraguas'); if(!abrigo) it.push('👢 Botas de agua'); av.push(['', '☔ Probabilidad de lluvia del '+p+'%']); }
+    else if(p >= 25) { it.push('☂️ Paraguas pequeño'); av.push(['', '🌦️ Posible lluvia ('+p+'%)']); }
+    if(r >= 60) { av.push(['v','💨 Viento muy fuerte (rachas de '+Math.round(r)+' km/h): que lleve capucha y bien abrochado']); if(!abrigo) it.push('🧥 Cortavientos'); else if(st >= 5) it.push('🧢 Gorro o capucha'); }
+    else if(r >= 40) { av.push(['v','💨 Viento (rachas de '+Math.round(r)+' km/h): da más frío del que marca']); if(!abrigo && st < 20) it.push('🧥 Cortavientos'); else if(abrigo && st >= 5) it.push('🧢 Gorro o capucha'); }
+    if(uv >= 6 && st >= 18) { it.push('🧴 Crema solar'); av.push(['s','☀️ Sol fuerte (UV '+Math.round(uv)+')']); }
+    if(tar.length && man.length && max(tar,function(x){return x.t;}) - min(man,function(x){return x.s;}) >= 8) av.push(['s','🧅 Mucha diferencia entre la mañana y la tarde: mejor por capas']);
+    var mi = man.length ? Math.round(min(man,function(x){return x.s;})) : null, ta = tar.length ? Math.round(max(tar,function(x){return x.t;})) : null;
+    var txt = (mi!==null ? 'Por la mañana, sensación de '+mi+'°' : '') + (ta!==null ? (mi!==null?'; a la salida del cole, ':'A la salida del cole, ')+ta+'°' : '') + '.';
+    // quitar duplicados
+    var vis = {}; it = it.filter(function(x){ if(vis[x]) return false; vis[x]=1; return true; });
+    return { items:it, avisos:av, texto:txt };
+  }
+
+  function resumenDia(){
+    if(!WX || !WX.daily) return '';
+    var d = WX.daily, c = wcod(d.weather_code[0]);
+    return c[1]+'. Entre '+Math.round(d.temperature_2m_min[0])+'° y '+Math.round(d.temperature_2m_max[0])+'°' +
+      (d.precipitation_probability_max[0]>=30 ? ', '+d.precipitation_probability_max[0]+'% de lluvia' : '') +
+      (d.wind_gusts_10m_max[0]>=40 ? ', rachas de '+Math.round(d.wind_gusts_10m_max[0])+' km/h' : '') + '.';
+  }
+
+  function consejoHoy(){
+    var hs = horas(), reg = ropaReglas(hs);
+    var g = CONSEJO && CONSEJO.fecha === kdia(new Date()) ? CONSEJO : null;
+    return { reglas:reg, gemini:g };
+  }
+
+  function fichaTiempo(){
+    var s = '<div class="ftit">🌤️ El tiempo hoy</div><span class="mas">Por horas ›</span>';
+    if(!WX || !WX.current){ return s+'<div class="vacio">Cargando el tiempo…</div>'; }
+    var cu = WX.current, c = wcod(cu.weather_code, !cu.is_day), d = WX.daily, k = consejoHoy();
+    s += '<div class="tnow"><div class="ticon">'+c[0]+'</div><div><div class="ttemp">'+Math.round(cu.temperature_2m)+'°</div>'+
+      '<div class="tmm">↓ '+Math.round(d.temperature_2m_min[0])+'°  ↑ '+Math.round(d.temperature_2m_max[0])+'° · Sensación '+Math.round(cu.apparent_temperature)+'°</div></div></div>';
+    s += '<div class="tdesc">'+esc(k.gemini && k.gemini.resumen ? k.gemini.resumen : resumenDia())+'</div>';
+    var items = k.gemini && k.gemini.ropa && k.gemini.ropa.length ? k.gemini.ropa : (k.reglas ? k.reglas.items : []);
+    s += '<div class="ropa"><div class="rl">👦 Para ir al cole</div>'+items.map(function(x){ return '<span class="rit">'+esc(x)+'</span>'; }).join('')+
+      (k.gemini && k.gemini.consejo ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.gemini.consejo)+'</div>' : (k.reglas ? '<div style="font-size:14px;font-weight:700;margin-top:4px">'+esc(k.reglas.texto)+'</div>' : ''))+'</div>';
+    if(k.reglas && k.reglas.avisos.length) s += '<div class="ravisos">'+k.reglas.avisos.map(function(a){ return '<span class="aviso '+a[0]+'">'+esc(a[1])+'</span>'; }).join('')+'</div>';
+    return s;
+  }
+
+  function graficaSVG(hs){
+    if(!hs.length) return '';
+    var W = Math.max(hs.length*58, 600), H = 240, top = 30, bot = 70, ph = H - top - bot;
+    var tmin = Math.floor(min(hs,function(x){return Math.min(x.t,x.s);}))-1, tmax = Math.ceil(max(hs,function(x){return x.t;}))+1;
+    if(tmax - tmin < 6) { tmax += 2; tmin -= 2; }
+    function X(i){ return 29 + i*58; }
+    function Y(t){ return top + ph - (t - tmin)/(tmax - tmin)*ph; }
+    var s = '<svg width="'+W+'" height="'+H+'" viewBox="0 0 '+W+' '+H+'">';
+    // franjas del cole
+    var e = aMin(CFG.entrada), sa = aMin(CFG.salida);
+    hs.forEach(function(x,i){ var m = x.d.getHours()*60; if((m>=e-60 && m<=e+30) || (m>=sa-30 && m<=sa+60)) s += '<rect x="'+(X(i)-29)+'" y="0" width="58" height="'+(H-22)+'" fill="#FFF6DC"/>'; });
+    // lluvia (barras)
+    hs.forEach(function(x,i){ var bh = x.p/100*(bot-30); if(bh>0) s += '<rect x="'+(X(i)-12)+'" y="'+(H-24-bh)+'" width="24" height="'+bh+'" rx="5" fill="#7FB3E3" opacity=".85"/>'+(x.p>=20?'<text x="'+X(i)+'" y="'+(H-28-bh)+'" font-size="11" font-weight="800" fill="#3E7CB1" text-anchor="middle">'+x.p+'%</text>':''); });
+    // sensación térmica (discontinua) y temperatura (línea)
+    var p1 = '', p2 = '';
+    hs.forEach(function(x,i){ p1 += (i?' L':'M')+X(i)+' '+Y(x.t).toFixed(1); p2 += (i?' L':'M')+X(i)+' '+Y(x.s).toFixed(1); });
+    s += '<path d="'+p2+'" fill="none" stroke="#9AA5AE" stroke-width="2.5" stroke-dasharray="5 5"/>';
+    s += '<path d="'+p1+'" fill="none" stroke="#D9735A" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/>';
+    hs.forEach(function(x,i){ s += '<circle cx="'+X(i)+'" cy="'+Y(x.t).toFixed(1)+'" r="5" fill="#fff" stroke="#D9735A" stroke-width="3"/>'+
+      '<text x="'+X(i)+'" y="'+(Y(x.t)-11).toFixed(1)+'" font-size="13" font-weight="800" fill="#2E2A26" text-anchor="middle">'+Math.round(x.t)+'°</text>'; });
+    // viento (rachas)
+    hs.forEach(function(x,i){ var col = x.r>=60?'#8E5BB5':x.r>=40?'#B08ED6':'#C9C2BA'; s += '<text x="'+X(i)+'" y="'+(H-6)+'" font-size="11" font-weight="800" fill="'+col+'" text-anchor="middle">💨'+Math.round(x.r)+'</text>'; });
+    s += '</svg>';
+    return s;
+  }
+
+  function abrirTiempo(){
+    var hs = horas(), ahora = new Date(), k = consejoHoy();
+    var s = '<div class="ovb"><button class="bbig" data-cerrar="ovTiempo">‹ Panel</button><h2>🌤️ El tiempo hoy</h2><span style="width:110px"></span></div><div class="ovc">';
+    if(!WX){ s += '<div class="vacio">Sin datos del tiempo todavía.</div></div>'; $('ovTiempo').innerHTML=s; $('ovTiempo').className='ov on'; return; }
+    var cu = WX.current, c = wcod(cu.weather_code, !cu.is_day), d = WX.daily;
+    s += '<div class="thero"><div class="ticon">'+c[0]+'</div><div style="margin-right:30px"><div class="ttemp">'+Math.round(cu.temperature_2m)+'°</div><div class="tmm">'+esc(c[1])+' · Sensación '+Math.round(cu.apparent_temperature)+'°</div></div>'+
+      '<div style="-webkit-flex:1;flex:1;min-width:260px"><div class="tdesc" style="margin:0 0 8px">'+esc(k.gemini && k.gemini.resumen ? k.gemini.resumen : resumenDia())+'</div>'+
+      '<div class="tmm">🌅 '+d.sunrise[0].slice(11)+'  ·  🌇 '+d.sunset[0].slice(11)+'  ·  UV máx '+Math.round(d.uv_index_max[0]||0)+'  ·  💨 rachas '+Math.round(d.wind_gusts_10m_max[0])+' km/h</div></div></div>';
+    // Ropa
+    var items = k.gemini && k.gemini.ropa && k.gemini.ropa.length ? k.gemini.ropa : (k.reglas ? k.reglas.items : []);
+    s += '<div class="ropa" style="margin-top:14px"><div class="rl">👦 Cómo vestirle hoy</div>'+items.map(function(x){ return '<span class="rit">'+esc(x)+'</span>'; }).join('')+
+      '<div style="font-size:15px;font-weight:700;margin-top:4px">'+esc(k.gemini && k.gemini.consejo ? k.gemini.consejo : (k.reglas?k.reglas.texto:''))+'</div>'+
+      (k.reglas && k.reglas.avisos.length ? k.reglas.avisos.map(function(a){ return '<span class="aviso '+a[0]+'">'+esc(a[1])+'</span>'; }).join('') : '')+'</div>';
+    // Bloques mañana / tarde / noche
+    var bloques = [['Mañana',7,12],['Tarde',13,19],['Noche',20,23]];
+    s += '<div class="tbloq">'+bloques.map(function(b){
+      var f = hs.filter(function(x){ var h=x.d.getHours(); return h>=b[1] && h<=b[2]; }); if(!f.length) return '';
+      var cc = f[Math.floor(f.length/2)].c, ic = wcod(cc, b[0]==='Noche')[0];
+      return '<div class="tb"><div class="n">'+b[0]+'</div><div class="i">'+ic+'</div><div class="t">'+Math.round(min(f,function(x){return x.t;}))+'° – '+Math.round(max(f,function(x){return x.t;}))+'°</div>'+
+        '<div class="x">☔ '+max(f,function(x){return x.p;})+'%  ·  💨 '+Math.round(max(f,function(x){return x.r;}))+' km/h</div></div>';
+    }).join('')+'</div>';
+    // Hora a hora
+    var desde = hs.filter(function(x){ return x.d.getHours() >= Math.max(6, ahora.getHours()-1); });
+    s += '<h3 class="sec">Hora a hora</h3><div class="horas">'+desde.map(function(x){
+      var ah = x.d.getHours()===ahora.getHours();
+      return '<div class="hc'+(ah?' ahora':'')+'"><div class="hh">'+(ah?'Ahora':x.d.getHours()+':00')+'</div><div class="hi">'+wcod(x.c, !x.dia)[0]+'</div><div class="ht">'+Math.round(x.t)+'°</div>'+
+        '<div class="hs">☔ '+x.p+'%</div><div class="hs">💨 '+Math.round(x.r)+'</div></div>';
+    }).join('')+'</div>';
+    s += '<h3 class="sec">Temperatura, lluvia y viento</h3><div class="grafica">'+graficaSVG(hs.filter(function(x){ return x.d.getHours()>=6; }))+'</div>'+
+      '<div class="leyg"><i style="background:#D9735A"></i>Temperatura<i style="background:#9AA5AE"></i>Sensación térmica<i style="background:#7FB3E3"></i>Probabilidad de lluvia<i style="background:#FFF6DC;border:1px solid #E8D9A8"></i>Horas del cole · 💨 rachas de viento (km/h)</div>';
+    // Mañana
+    if(d.time[1]){ var c2 = wcod(d.weather_code[1]); s += '<h3 class="sec">Mañana, '+DIAS[fechaLocal(d.time[1]).getDay()]+'</h3><div class="dtxt">'+c2[0]+' '+esc(c2[1])+'. Entre '+Math.round(d.temperature_2m_min[1])+'° y '+Math.round(d.temperature_2m_max[1])+'°, lluvia '+d.precipitation_probability_max[1]+'%, rachas de '+Math.round(d.wind_gusts_10m_max[1])+' km/h.</div>'; }
+    s += '<div class="leyg" style="margin-top:14px">Datos: Open-Meteo'+(k.gemini?' · Consejo de ropa: Gemini':'')+'</div></div>';
+    $('ovTiempo').innerHTML = s; $('ovTiempo').className = 'ov on'; $('ovTiempo').scrollTop = 0;
+  }
+
+  /* ================== CENAS ================== */
+  var CEN = null;
+  function cargaCenas(){
+    var sc = document.createElement('script');
+    sc.src = CENAS + 'data.js?v=' + Date.now();
+    sc.onload = function(){ CEN = window.MENU_DATA || null; pinta(); };
+    document.head.appendChild(sc);
+  }
+  function fichaCenas(){
+    var s = '<div class="ftit">🍽️ Cenas de hoy</div><span class="mas">Ver recetas ›</span>';
+    if(!CEN || !CEN.hoy) return s+'<div class="vacio">Cargando cenas…</div>';
+    var h = CEN.hoy, hoyk = kdia(new Date());
+    if(h.fecha !== hoyk) s += '<div class="cole" style="background:#FFF6DC">⏳ Las cenas de hoy se están preparando. Mientras tanto, las de '+esc(h.fecha)+'.</div>';
+    var pl = (h.cole && h.cole.platos) || [];
+    if(pl.length) s += '<div class="cole"><b>En el cole ha comido</b>'+esc(pl.slice(0,2).join(' · '))+'</div>';
+    s += '<ul class="cl">'+(h.cenas||[]).map(function(r){
+      var em = r.gourmet ? '✨' : r.healthy ? '💪' : r.peques ? '🧒' : '🍽️';
+      return '<li><span class="em">'+em+'</span>'+esc(r.titulo)+'</li>';
+    }).join('')+'</ul>';
+    return s;
+  }
+  function abrirCenas(){
+    var ov = $('ovCenas');
+    if(!ov.querySelector('iframe')){ var f = document.createElement('iframe'); f.src = CENAS; ov.appendChild(f); }
+    ov.className = 'ov on';
+  }
+
+  /* ================== CALENDARIO ================== */
+  var EVS = lget('panel_evs', null), CALERR = {};
+  function revive(list){ return (list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; }); }
+  var EVENTOS = EVS ? revive(EVS.ev) : [];
+
+  // ---- Parser ICS (con repeticiones básicas) ----
+  function icsFecha(v, params){
+    var m = String(v).match(/^(\d{4})(\d{2})(\d{2})(?:T(\d{2})(\d{2})(\d{2})(Z)?)?/); if(!m) return null;
+    if(!m[4]) return { d:new Date(+m[1], +m[2]-1, +m[3]), todo:true };
+    if(m[7]) return { d:new Date(Date.UTC(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6])), todo:false };
+    return { d:new Date(+m[1], +m[2]-1, +m[3], +m[4], +m[5], +m[6]), todo:false }; // TZID: se asume la zona del aparato
+  }
+  function icsDur(v){ var m = String(v).match(/P(?:(\d+)W)?(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?/); if(!m) return 0; return ((+m[1]||0)*7*86400 + (+m[2]||0)*86400 + (+m[3]||0)*3600 + (+m[4]||0)*60 + (+m[5]||0))*1000; }
+  function txt(v){ return String(v||'').replace(/\\n/gi,' ').replace(/\\,/g,',').replace(/\\;/g,';').replace(/\\\\/g,'\\'); }
+  var BD = {SU:0,MO:1,TU:2,WE:3,TH:4,FR:5,SA:6};
+  function parseICS(texto, cal, desde, hasta){
+    var lines = texto.replace(/\r\n[ \t]/g,'').replace(/\n[ \t]/g,'').split(/\r?\n/), evs = [], cur = null, overrides = {};
+    lines.forEach(function(l){
+      if(l==='BEGIN:VEVENT'){ cur = { ex:[] }; return; }
+      if(l==='END:VEVENT'){ if(cur) evs.push(cur); cur = null; return; }
+      if(!cur) return;
+      var i = l.indexOf(':'); if(i<0) return;
+      var k = l.slice(0,i), v = l.slice(i+1), nom = k.split(';')[0];
+      if(nom==='DTSTART') cur.ini = icsFecha(v);
+      else if(nom==='DTEND') cur.fin = icsFecha(v);
+      else if(nom==='DURATION') cur.dur = icsDur(v);
+      else if(nom==='SUMMARY') cur.titulo = txt(v);
+      else if(nom==='LOCATION') cur.lugar = txt(v);
+      else if(nom==='RRULE') cur.rrule = v;
+      else if(nom==='EXDATE') v.split(',').forEach(function(x){ var f = icsFecha(x); if(f) cur.ex.push(+f.d); });
+      else if(nom==='RECURRENCE-ID') cur.rid = icsFecha(v);
+      else if(nom==='UID') cur.uid = v;
+      else if(nom==='STATUS') cur.estado = v;
+    });
+    evs.forEach(function(e){ if(e.rid && e.uid) { overrides[e.uid+'|'+(+e.rid.d)] = 1; } });
+    var out = [];
+    function add(e, ini){
+      var dur = e.fin ? (+e.fin.d - +e.ini.d) : (e.dur || (e.ini.todo ? 86400000 : 3600000));
+      var fin = new Date(+ini + dur);
+      if(fin < desde || ini > hasta) return;
+      out.push({ cal:cal.nombre, color:cal.color, titulo:e.titulo||'(sin título)', lugar:e.lugar||'', todo:e.ini.todo, ini:ini, fin:fin });
+    }
+    evs.forEach(function(e){
+      if(!e.ini || e.estado==='CANCELLED') return;
+      if(!e.rrule || e.rid){ add(e, e.ini.d); return; }
+      var R = {}; e.rrule.split(';').forEach(function(p){ var kv=p.split('='); R[kv[0]]=kv[1]; });
+      var iv = +R.INTERVAL || 1, cnt = R.COUNT ? +R.COUNT : 0, until = R.UNTIL ? icsFecha(R.UNTIL).d : null, n = 0, guard = 0;
+      var d0 = e.ini.d, H = d0.getHours(), Mi = d0.getMinutes();
+      function emite(f){
+        if(f < d0) return true;
+        if(until && f > until) return false;
+        if(cnt && n >= cnt) return false;
+        n++;
+        if(e.ex.indexOf(+f)<0 && !(e.uid && overrides[e.uid+'|'+(+f)])) add(e, f);
+        return f <= hasta;
+      }
+      var seguir = true;
+      if(R.FREQ==='DAILY'){
+        for(var f=new Date(d0); seguir && guard<2000; guard++){ seguir = emite(new Date(f)); f.setDate(f.getDate()+iv); }
+      } else if(R.FREQ==='WEEKLY'){
+        var dias = R.BYDAY ? R.BYDAY.split(',').map(function(x){ return BD[x.slice(-2)]; }).sort() : [d0.getDay()];
+        var lunes = new Date(d0.getFullYear(), d0.getMonth(), d0.getDate()-((d0.getDay()+6)%7));
+        for(var w=0; seguir && guard<1000; w+=iv, guard++){
+          for(var j=0;j<7 && seguir;j++){
+            var dd = new Date(lunes.getFullYear(), lunes.getMonth(), lunes.getDate()+w*7+j, H, Mi);
+            if(dias.indexOf(dd.getDay())>=0) seguir = emite(dd);
+          }
+        }
+      } else if(R.FREQ==='MONTHLY'){
+        for(var mm=0; seguir && guard<600; mm+=iv, guard++){
+          var y = d0.getFullYear(), mo = d0.getMonth()+mm, cand = [];
+          if(R.BYDAY){
+            R.BYDAY.split(',').forEach(function(bd){
+              var mt = bd.match(/^([+-]?\d)?([A-Z]{2})$/); if(!mt) return;
+              var ord = mt[1] ? +mt[1] : 0, wd = BD[mt[2]], dias2 = [];
+              for(var q=1;q<=31;q++){ var t = new Date(y, mo, q); if(t.getMonth() !== ((mo%12)+12)%12) break; if(t.getDay()===wd) dias2.push(q); }
+              (ord ? [ord>0 ? dias2[ord-1] : dias2[dias2.length+ord]] : dias2).forEach(function(q){ if(q) cand.push(new Date(y, mo, q, H, Mi)); });
+            });
+          } else {
+            var md = R.BYMONTHDAY ? +R.BYMONTHDAY : d0.getDate(), t2 = new Date(y, mo, md, H, Mi);
+            if(t2.getDate()===md) cand.push(t2);
+          }
+          cand.sort(function(a,b){return a-b;}).forEach(function(c){ if(seguir) seguir = emite(c); });
+        }
+      } else if(R.FREQ==='YEARLY'){
+        for(var yy=0; seguir && guard<200; yy+=iv, guard++){ var t3 = new Date(d0.getFullYear()+yy, d0.getMonth(), d0.getDate(), H, Mi); if(t3.getDate()===d0.getDate()) seguir = emite(t3); }
+      } else add(e, d0);
+    });
+    return out;
+  }
+
+  function cargaCalendarios(){
+    var cals = CFG.calendarios || [];
+    if(!cals.length || !CFG.worker) { pinta(); return; }
+    var hoy = new Date(), desde = new Date(hoy.getFullYear(), hoy.getMonth()-2, 1), hasta = new Date(hoy.getFullYear(), hoy.getMonth()+3, 0, 23, 59);
+    var pend = cals.length, acc = [];
+    cals.forEach(function(c){
+      var url = CFG.worker.replace(/\/+$/,'') + '/?url=' + encodeURIComponent(c.url.replace(/^webcal:\/\//i,'https://'));
+      xhr(url, function(t){
+        try{ acc = acc.concat(parseICS(t, c, desde, hasta)); CALERR[c.url] = ''; }catch(e){ CALERR[c.url] = 'No se pudo leer'; }
+        fin();
+      }, function(st){ CALERR[c.url] = 'Error '+st; fin(); });
+    });
+    function fin(){
+      if(--pend > 0) return;
+      // Si alguno falló, conservar sus eventos guardados
+      var fallidos = cals.filter(function(c){ return CALERR[c.url]; }).map(function(c){ return c.nombre; });
+      if(fallidos.length) acc = acc.concat(EVENTOS.filter(function(e){ return fallidos.indexOf(e.cal)>=0; }));
+      acc.sort(function(a,b){ return (a.todo===b.todo ? a.ini-b.ini : (a.todo?-1:1)); });
+      EVENTOS = acc;
+      lset('panel_evs', { t:Date.now(), ev:acc.map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, todo:e.todo, ini:+e.ini, fin:+e.fin }; }) });
+      pinta(); if($('ovCal').className.indexOf('on')>=0) pintaCal();
+      if($('ovAjustes').className.indexOf('on')>=0) abrirAjustes();
+    }
+  }
+  function eventosDe(d){
+    var a = new Date(d.getFullYear(), d.getMonth(), d.getDate()), b = new Date(a.getFullYear(), a.getMonth(), a.getDate()+1);
+    return EVENTOS.filter(function(e){ return e.ini < b && e.fin > a && !(e.todo && +e.fin === +a); })
+      .sort(function(x,y){ return (x.todo===y.todo ? x.ini-y.ini : (x.todo?-1:1)); });
+  }
+  function horaEv(e, d){
+    if(e.todo) return 'Todo el día';
+    var a = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    var i = e.ini < a ? 'antes' : hhmm(e.ini), f = hhmm(e.fin);
+    return i+' – '+f;
+  }
+  function evHTML(e, d){
+    return '<div class="ev"><div class="bar" style="background:'+esc(e.color)+'"></div><div class="evb"><div class="evh">'+esc(horaEv(e,d))+' · '+esc(e.cal)+'</div>'+
+      '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">📍 '+esc(e.lugar)+'</div>':'')+'</div></div>';
+  }
+  function fichaCal(){
+    var s = '<div class="ftit">📅 Hoy</div><span class="mas">Ver mes ›</span>';
+    if(!(CFG.calendarios||[]).length || !CFG.worker) return s+'<div class="vacio">Conecta tus calendarios de Google o iCloud.<br><button class="boton" data-ajustes="1">⚙️ Configurar calendarios</button></div>';
+    var hoy = new Date(), ev = eventosDe(hoy);
+    var ahora = Date.now();
+    var vis = ev.filter(function(e){ return e.todo || +e.fin > ahora; });
+    if(!vis.length) s += '<div class="vacio">'+(ev.length ? '✅ Ya no queda nada más hoy' : '🌿 Hoy no hay nada en el calendario')+'</div>';
+    else s += vis.slice(0,6).map(function(e){ return evHTML(e, hoy); }).join('') + (vis.length>6 ? '<div class="manana">+ '+(vis.length-6)+' más</div>' : '');
+    var man = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate()+1), em = eventosDe(man);
+    s += '<div class="manana">Mañana: '+(em.length ? em.length+' evento'+(em.length>1?'s':'')+' · '+esc(em[0].titulo) : 'nada')+'</div>';
+    return s;
+  }
+
+  var VCAL = 'mes', REF = new Date(), SEL = new Date();
+  function abrirCal(){ VCAL = lget('panel_vcal','mes'); REF = new Date(); SEL = new Date(); pintaCal(); $('ovCal').className = 'ov on'; $('ovCal').scrollTop = 0; }
+  function pintaCal(){
+    var hoyk = kdia(new Date()), s = '<div class="ovb"><button class="bbig" data-cerrar="ovCal">‹ Panel</button><h2>📅 Calendario</h2><button class="bbig" data-ajustes="1">⚙️</button></div><div class="ovc">';
+    var tit = VCAL==='mes' ? cap(MESES[REF.getMonth()])+' '+REF.getFullYear() : (function(){ var l = lunesDe(REF), d = new Date(l.getFullYear(), l.getMonth(), l.getDate()+6); return l.getDate()+' '+MESES[l.getMonth()].slice(0,3)+' – '+d.getDate()+' '+MESES[d.getMonth()].slice(0,3); })();
+    s += '<div class="calbar"><div class="seg"><button class="'+(VCAL==='mes'?'on':'')+'" data-vcal="mes">Mes</button><button class="'+(VCAL==='sem'?'on':'')+'" data-vcal="sem">Semana</button></div>'+
+      '<div class="nav"><button class="nb" data-cnav="-1">‹</button><span class="nt">'+tit+'</span><button class="nb" data-cnav="1">›</button><button class="hoyb" data-cnav="0">Hoy</button></div></div>';
+    if(VCAL==='mes'){
+      s += '<div class="mes"><div class="mrow mhd">'+['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'].map(function(x){ return '<div>'+x+'</div>'; }).join('')+'</div>';
+      var d = lunesDe(new Date(REF.getFullYear(), REF.getMonth(), 1)), finMes = new Date(REF.getFullYear(), REF.getMonth()+1, 0);
+      while(d <= finMes){
+        s += '<div class="mrow">';
+        for(var i=0;i<7;i++){
+          var dd = new Date(d.getFullYear(), d.getMonth(), d.getDate()+i), k = kdia(dd), ev = eventosDe(dd);
+          s += '<div class="md'+(dd.getMonth()!==REF.getMonth()?' fuera':'')+(k===hoyk?' hoy':'')+(k===kdia(SEL)?' sel':'')+'" data-dsel="'+k+'"><div class="dn">'+dd.getDate()+'</div>'+
+            ev.slice(0,3).map(function(e){ return e.todo ? '<span class="chip" style="background:'+esc(e.color)+'">'+esc(e.titulo)+'</span><span class="chip mob" style="background:'+esc(e.color)+'"></span>'
+              : '<span class="chip d"><i style="background:'+esc(e.color)+'"></i>'+hhmm(e.ini)+' '+esc(e.titulo)+'</span><span class="chip mob" style="background:'+esc(e.color)+'"></span>'; }).join('')+
+            (ev.length>3?'<span class="masn">+'+(ev.length-3)+' más</span>':'')+'</div>';
+        }
+        s += '</div>'; d = new Date(d.getFullYear(), d.getMonth(), d.getDate()+7);
+      }
+      s += '</div>';
+      var es = eventosDe(SEL);
+      s += '<div class="dia"><h3 class="sec">'+cap(DIAS[SEL.getDay()])+' '+SEL.getDate()+' de '+MESES[SEL.getMonth()]+'</h3>'+(es.length ? es.map(function(e){ return evHTML(e, SEL); }).join('') : '<div class="vacio">Nada este día</div>')+'</div>';
+    } else {
+      var l = lunesDe(REF);
+      s += '<div class="sem">';
+      for(var j=0;j<7;j++){
+        var dj = new Date(l.getFullYear(), l.getMonth(), l.getDate()+j), ej = eventosDe(dj);
+        s += '<div class="sc'+(kdia(dj)===hoyk?' hoy':'')+'"><div class="sh"><b>'+DCORTO[dj.getDay()]+'</b><span>'+dj.getDate()+'</span></div>'+
+          (ej.length ? ej.map(function(e){ return '<div class="se" style="background:'+esc(e.color)+'"><div class="h">'+esc(e.todo?'Todo el día':hhmm(e.ini))+'</div><div class="t">'+esc(e.titulo)+'</div></div>'; }).join('') : '<div class="vacio" style="padding:8px 0;font-size:13px">—</div>')+'</div>';
+      }
+      s += '</div>';
+    }
+    s += '<div class="leyc">'+(CFG.calendarios||[]).map(function(c){ return '<span><i style="background:'+esc(c.color)+'"></i>'+esc(c.nombre)+'</span>'; }).join('')+'</div></div>';
+    $('ovCal').innerHTML = s;
+  }
+  function lunesDe(d){ return new Date(d.getFullYear(), d.getMonth(), d.getDate()-((d.getDay()+6)%7)); }
+
+  /* ================== AJUSTES ================== */
+  var NUEVO = { color: PALETA[0] };
+  function abrirAjustes(){
+    var s = '<div class="ovb"><button class="bbig" data-cerrar="ovAjustes">‹ Panel</button><h2>⚙️ Ajustes</h2><span style="width:110px"></span></div><div class="ovc">';
+    s += '<div class="form"><h3>📅 Calendarios</h3>'+
+      ((CFG.calendarios||[]).length ? CFG.calendarios.map(function(c,i){ return '<div class="crow"><span class="cc" style="background:'+esc(c.color)+'"></span><div class="cn2">'+esc(c.nombre)+
+        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado" style="color:#B23A3A">⚠️ '+esc(CALERR[c.url])+'</div>':'')+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
+        : '<div class="ayuda">Todavía no hay calendarios.</div>')+
+      '<label>Nombre</label><input id="cNom" placeholder="Familia, Trabajo, Cole…" value="'+esc(NUEVO.nombre||'')+'">'+
+      '<label>Enlace del calendario (.ics)</label><input id="cUrl" placeholder="https://calendar.google.com/calendar/ical/…/basic.ics" value="'+esc(NUEVO.url||'')+'" autocapitalize="off" autocorrect="off">'+
+      '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NUEVO.color===p?'on':'')+'" data-color="'+p+'"></button>'; }).join('')+'</div>'+
+      '<button class="boton" data-addcal="1">➕ Añadir calendario</button>'+
+      '<div class="ayuda" style="margin-top:14px"><b>Google Calendar:</b> en la web de Google Calendar → ⚙️ Configuración → elige el calendario → copia la <b>"Dirección secreta en formato iCal"</b>.<br>'+
+      '<b>iPhone / iPad (iCloud):</b> en la app Calendario → "Calendarios" → ⓘ junto al calendario → activa <b>"Calendario público"</b> y copia el enlace.<br>'+
+      'Los enlaces se guardan <b>solo en este aparato</b>.</div></div>';
+    s += '<div class="form"><h3>🔌 Intermediario (Cloudflare Worker)</h3><label>Dirección del worker</label><input id="cWorker" placeholder="https://calendarios.tu-cuenta.workers.dev" value="'+esc(CFG.worker||'')+'" autocapitalize="off" autocorrect="off">'+
+      '<button class="boton" data-saveworker="1">Guardar</button></div>';
+    s += '<div class="form"><h3>👦 Horario del cole</h3><div class="ayuda">Para el consejo de ropa: se mira el tiempo a la hora de ir y de volver.</div><div class="dos"><div><label>Entrada</label><input id="cEnt" type="time" value="'+esc(CFG.entrada)+'"></div><div><label>Salida</label><input id="cSal" type="time" value="'+esc(CFG.salida)+'"></div></div>'+
+      '<button class="boton" data-savehoras="1">Guardar</button></div></div>';
+    $('ovAjustes').innerHTML = s; $('ovAjustes').className = 'ov on';
+  }
+  function guardaCfg(){ lset('panel_cfg', CFG); }
+
+  /* ================== Pintar panel ================== */
+  function pinta(){
+    var d = new Date(), h = d.getHours();
+    var saludo = h < 6 ? 'Buenas noches' : h < 13 ? 'Buenos días' : h < 21 ? 'Buenas tardes' : 'Buenas noches';
+    var s = '<div class="cab"><div><div class="saludo">'+saludo+'</div><div class="hora" id="hora">'+hhmm(d)+'</div><div class="fecha">'+cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()]+'</div></div>'+
+      '<div class="cabd"><button class="ajustes" data-ajustes="1">⚙️</button></div></div>';
+    s += '<div class="fichas"><div class="ficha"><div class="fin tw" data-abrir="tiempo">'+fichaTiempo()+'</div></div>'+
+      '<div class="ficha"><div class="fin cn" data-abrir="cenas">'+fichaCenas()+'</div></div>'+
+      '<div class="ficha"><div class="fin ca" data-abrir="cal">'+fichaCal()+'</div></div></div>';
+    $('app').innerHTML = s;
+  }
+
+  /* ================== Eventos ================== */
+  document.addEventListener('click', function(ev){
+    var t = ev.target;
+    while(t && t !== document){
+      if(t.getAttribute){
+        var a;
+        if((a = t.getAttribute('data-cerrar'))){ $(a).className = 'ov'; return; }
+        if(t.getAttribute('data-ajustes')){ abrirAjustes(); return; }
+        if((a = t.getAttribute('data-abrir'))){ if(a==='tiempo') abrirTiempo(); else if(a==='cenas') abrirCenas(); else abrirCal(); return; }
+        if((a = t.getAttribute('data-vcal'))){ VCAL = a; lset('panel_vcal', a); pintaCal(); return; }
+        if((a = t.getAttribute('data-cnav')) !== null){
+          var n = +a;
+          if(n===0){ REF = new Date(); SEL = new Date(); }
+          else if(VCAL==='mes') REF = new Date(REF.getFullYear(), REF.getMonth()+n, 1);
+          else REF = new Date(REF.getFullYear(), REF.getMonth(), REF.getDate()+7*n);
+          pintaCal(); return;
+        }
+        if((a = t.getAttribute('data-dsel'))){ SEL = fechaLocal(a); pintaCal(); return; }
+        if((a = t.getAttribute('data-color'))){ NUEVO.nombre = $('cNom').value; NUEVO.url = $('cUrl').value; NUEVO.color = a; abrirAjustes(); return; }
+        if(t.getAttribute('data-addcal')){
+          var nom = $('cNom').value.replace(/^\s+|\s+$/g,''), url = $('cUrl').value.replace(/^\s+|\s+$/g,'');
+          if(!nom || !/^(https?|webcal):\/\//i.test(url)){ alertaForm('Pon un nombre y un enlace que empiece por https:// o webcal://'); return; }
+          CFG.calendarios.push({ nombre:nom, url:url, color:NUEVO.color }); guardaCfg();
+          NUEVO = { color: PALETA[CFG.calendarios.length % PALETA.length] }; abrirAjustes(); cargaCalendarios(); return;
+        }
+        if((a = t.getAttribute('data-delcal')) !== null){ CFG.calendarios.splice(+a,1); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
+        if(t.getAttribute('data-saveworker')){ CFG.worker = $('cWorker').value.replace(/^\s+|\s+$/g,''); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
+        if(t.getAttribute('data-savehoras')){ CFG.entrada = $('cEnt').value || '08:00'; CFG.salida = $('cSal').value || '16:30'; guardaCfg(); abrirAjustes(); pinta(); return; }
+      }
+      t = t.parentNode;
+    }
+  });
+  function alertaForm(m){ var b = document.createElement('div'); b.className='estado'; b.style.color='#B23A3A'; b.innerHTML='⚠️ '+esc(m); var f=$('ovAjustes').querySelector('.form'); f.appendChild(b); }
+
+  // Reloj y recargas
+  var ultDia = kdia(new Date());
+  setInterval(function(){
+    var e = $('hora'); if(e) e.innerHTML = hhmm(new Date());
+    var k = kdia(new Date()); if(k !== ultDia){ ultDia = k; pinta(); cargaTiempo(); cargaCenas(); cargaCalendarios(); }
+  }, 15000);
+  setInterval(cargaTiempo, 30*60*1000);
+  setInterval(cargaCenas, 30*60*1000);
+  setInterval(cargaCalendarios, 15*60*1000);
+  setInterval(function(){ if(document.querySelectorAll('.ov.on').length===0) pinta(); }, 60*1000);
+
+  pinta(); cargaTiempo(); cargaCenas(); cargaCalendarios();
+})();
+</script>
+</body>
+</html>
