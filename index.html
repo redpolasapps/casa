@@ -603,7 +603,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   // Quita repetidos: mismo título (sin fijarse en espacios ni mayúsculas) a la misma hora, aunque vengan de calendarios distintos
   // o de un calendario que tenga copias (pasa cuando una app sincroniza mal y duplica los eventos).
   function normT(t){ return String(t||'').toLowerCase().replace(/[\s\u00a0\u200b]+/g,' ').replace(/^\s+|\s+$/g,''); }
-  function unicos(list){ var vis = {}; return list.filter(function(e){ var k = normT(e.titulo)+'|'+Math.floor(+e.ini/60000)+'|'+Math.floor(+e.fin/60000)+'|'+(e.todo?1:0); if(vis[k]) return false; vis[k] = 1; return true; }); }
+  function unicos(list){ var vis = {}; return list.filter(function(e){ var k = normT(e.titulo)+'|'+Math.floor(+e.ini/60000)+'|'+(e.todo?1:0); if(vis[k]) return false; vis[k] = 1; return true; }); }
   function revive(list){ return unicos((list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota||'', url:e.url||'', todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; })); }
   var EVENTOS = EVS ? revive(EVS.ev) : [];
 
@@ -719,7 +719,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
         try{
           if(String(t).indexOf('BEGIN:VCALENDAR') < 0) throw new Error('no es un calendario');
           var nv = parseICS(t, c, desde, hasta), tot = (String(t).match(/BEGIN:VEVENT/g)||[]).length;
-          acc = acc.concat(nv); CALERR[c.url] = ''; CALN[c.url] = { ev:tot, vis:nv.length };
+          var nu = unicos(nv); acc = acc.concat(nu); CALERR[c.url] = ''; CALN[c.url] = { ev:tot, vis:nu.length, rep:nv.length-nu.length };
         }catch(e){ CALERR[c.url] = 'No se pudo leer el calendario ('+e.message+')'; }
         fin();
       }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); });
@@ -829,7 +829,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       '<div class="priv">'+ic('candado')+'<b>Privado:</b> los calendarios que añadas se guardan <b>solo en este aparato</b>. No se publican en la web ni se comparten con nadie: otras personas que abran el panel no los ven. '+
       'Para poder leerlos, el panel los descarga a través de un pequeño intermediario que solo los reenvía y no guarda nada.</div>'+
       ((CFG.calendarios||[]).length ? CFG.calendarios.map(function(c,i){ return '<div class="crow"><span class="cc" style="background:'+esc(c.color)+'"></span><div class="cn2">'+esc(c.nombre)+
-        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado mal">'+ic('alerta')+esc(CALERR[c.url])+'</div>':(CALN[c.url]?'<div class="estado bien">'+ic('check')+'Leído: '+CALN[c.url].ev+' eventos en el calendario, '+CALN[c.url].vis+' en los próximos meses</div>':'<div class="estado" style="color:#7A6F64">Cargando…</div>'))+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
+        '<div class="cu">'+esc(c.url.slice(0,60))+'…</div>'+(CALERR[c.url]?'<div class="estado mal">'+ic('alerta')+esc(CALERR[c.url])+'</div>':(CALN[c.url]?'<div class="estado bien">'+ic('check')+'Leído: '+CALN[c.url].ev+' eventos en el calendario, '+CALN[c.url].vis+' en los próximos meses'+(CALN[c.url].rep?' · '+CALN[c.url].rep+' repetidos quitados':'')+'</div>':'<div class="estado" style="color:#7A6F64">Cargando…</div>'))+'</div><button class="del" data-delcal="'+i+'">Quitar</button></div>'; }).join('')
         : '<div class="ayuda" style="margin:10px 0">Todavía no has añadido ningún calendario.</div>')+'</div>';
     s += '<div class="form"><h3>'+ic('mas')+'Añadir un calendario</h3>'+
       '<div class="ayuda">El panel no puede leer directamente el calendario del iPad o del móvil (Apple y Google no lo permiten a las webs). '+
