@@ -372,9 +372,10 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   }
   function xhr(url, ok, ko){
     try{
-      var x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = 20000;
-      x.onreadystatechange = function(){ if(x.readyState!==4) return; if(x.status>=200 && x.status<300) ok(x.responseText); else if(ko) ko(x.status); };
-      x.ontimeout = function(){ if(ko) ko('timeout'); };
+      // Una sola respuesta por petición (en un fallo por tiempo, Safari avisaba dos veces)
+      var hecho = false, x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = 30000;
+      x.onreadystatechange = function(){ if(x.readyState!==4 || hecho) return; hecho = true; if(x.status>=200 && x.status<300) ok(x.responseText); else if(ko) ko(x.status); };
+      x.ontimeout = function(){ if(hecho) return; hecho = true; if(ko) ko('timeout'); };
       x.send();
     }catch(e){ if(ko) ko(e.message); }
   }
@@ -598,7 +599,9 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
 
   /* ================== CALENDARIO ================== */
   var EVS = lget('panel_evs', null), CALERR = {}, CALN = {}, CALT = null;
-  function revive(list){ return (list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota||'', url:e.url||'', todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; }); }
+  // Quita eventos repetidos (mismo calendario, título y horas)
+  function unicos(list){ var vis = {}; return list.filter(function(e){ var k = e.cal+'|'+e.titulo+'|'+(+e.ini)+'|'+(+e.fin); if(vis[k]) return false; vis[k] = 1; return true; }); }
+  function revive(list){ return unicos((list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota||'', url:e.url||'', todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; })); }
   var EVENTOS = EVS ? revive(EVS.ev) : [];
 
   // ---- Parser ICS (con repeticiones básicas) ----
@@ -719,10 +722,11 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); });
     });
     function fin(){
-      if(--pend > 0) return;
+      if(--pend !== 0) return;
       // Si alguno falló, conservar sus eventos guardados
       var fallidos = cals.filter(function(c){ return CALERR[c.url]; }).map(function(c){ return c.nombre; });
       if(fallidos.length) acc = acc.concat(EVENTOS.filter(function(e){ return fallidos.indexOf(e.cal)>=0; }));
+      acc = unicos(acc);
       acc.sort(function(a,b){ return (a.todo===b.todo ? a.ini-b.ini : (a.todo?-1:1)); });
       EVENTOS = acc; CALT = new Date();
       lset('panel_evs', { t:Date.now(), ev:acc.map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota, url:e.url, todo:e.todo, ini:+e.ini, fin:+e.fin }; }) });
