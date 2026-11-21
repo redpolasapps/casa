@@ -3,13 +3,13 @@
 // Sin dependencias: Node 20+.  Variables: GEMINI_API_KEY (obligatoria), ENTRADA / SALIDA (opcional, "08:00" / "17:00").
 import { readFile, writeFile } from "node:fs/promises";
 import vm from "node:vm";
+import { llamarGemini } from "./gemini.mjs";
 
 // Todo lo propio de cada casa está en config.js (el mismo archivo que usa el panel)
 const CFG = await (async () => { try { const ctx = { window: {} }; vm.createContext(ctx); vm.runInContext(await readFile(new URL("../config.js", import.meta.url), "utf8"), ctx); return ctx.window.CONFIG || {}; } catch { return {}; } })();
 const LAT = CFG.lat ?? 41.44, LON = CFG.lon ?? 2.19; // zona aproximada, nunca la dirección
 const ZONA = CFG.zona || "Europe/Madrid", CIUDAD = CFG.ciudad || "Barcelona", EDAD = CFG.edad || 4;
 const ENTRADA = CFG.entrada || "08:00", ENTRADA_HASTA = CFG.entradaHasta || ENTRADA, SALIDA = CFG.salida || "17:00";
-const MODELOS = [process.env.GEMINI_MODEL || "gemini-flash-latest", "gemini-2.5-flash", "gemini-flash-lite-latest"];
 const log = (...a) => console.log("[tiempo]", ...a);
 const hoy = new Intl.DateTimeFormat("en-CA", { timeZone: ZONA }).format(new Date());
 const aMin = (t) => { const [h, m] = t.split(":").map(Number); return h * 60 + (m || 0); };
@@ -26,25 +26,7 @@ if (process.env.PROGRAMADO === "1") {
   if (!ok || (previo && previo.fecha === hoy && previo.tanda === TANDA)) { log(`Nada que hacer (tanda ${TANDA}: ${ok ? "ya hecha" : "aún no toca"})`); process.exit(0); }
 }
 
-async function gemini(prompt) {
-  const key = process.env.GEMINI_API_KEY; if (!key) throw new Error("Falta GEMINI_API_KEY");
-  let err;
-  for (const modelo of MODELOS) for (let i = 1; i <= 3; i++) {
-    try {
-      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${modelo}:generateContent`, {
-        method: "POST", headers: { "Content-Type": "application/json", "x-goog-api-key": key },
-        body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: prompt }] }], generationConfig: { responseMimeType: "application/json", temperature: 0.4 } }),
-        signal: AbortSignal.timeout(60000),
-      });
-      const t = await r.text();
-      if (r.status === 404) { err = new Error(modelo + " 404"); break; }
-      if (!r.ok) throw new Error(`${modelo}: HTTP ${r.status} ${t.slice(0, 200)}`);
-      const out = (JSON.parse(t).candidates?.[0]?.content?.parts || []).map((p) => p.text || "").join("");
-      log("Gemini:", modelo); return JSON.parse(out.replace(/^```(json)?|```$/g, "").trim());
-    } catch (e) { err = e; log("Fallo:", e.message); await new Promise((r) => setTimeout(r, 4000 * i)); }
-  }
-  throw err;
-}
+async function gemini(prompt) { return llamarGemini(prompt, { log, presupuestoMs: 8 * 60000, timeoutMs: 90000 }); }
 
 const url = `https://api.open-meteo.com/v1/forecast?latitude=${LAT}&longitude=${LON}&hourly=temperature_2m,apparent_temperature,precipitation_probability,weather_code,wind_speed_10m,wind_gusts_10m,uv_index&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_gusts_10m_max,uv_index_max&timezone=${encodeURIComponent(ZONA)}&forecast_days=1`;
 async function bajar(u, opts = {}, intentos = 2) {
