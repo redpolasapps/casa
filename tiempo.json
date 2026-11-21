@@ -1,15 +1,15 @@
 {
  "fecha": "2026-11-21",
- "tanda": "manana",
+ "tanda": "tarde",
  "sinCole": true,
- "generado": "2026-11-21T13:05:13.000Z",
- "resumen": "Día de temperaturas suaves, con una mañana agradable y seca pero con riesgo de chubascos por la tarde.",
+ "generado": "2026-11-21T16:47:15.949Z",
+ "resumen": "Tarde agradable con temperaturas suaves en torno a los 17°C, cielos nubosos, viento moderado y cierta probabilidad de lluvia a media tarde.",
  "ropa": [
+  "Chaqueta ligera o chubasquero",
   "Camiseta de manga larga",
-  "Sudadera",
-  "Chubasquero con capucha",
   "Pantalón largo",
-  "Zapatillas cerradas"
+  "Zapatillas cerradas",
+  "Paraguas"
  ],
- "consejo": "Aprovechad el parque por la mañana vestidle por capas, y por la tarde llevad el chubasquero porque puede llover."
+ "consejo": "Aprovechad para salir al parque al principio de la tarde, pero llevad un chubasquero o paraguas por si cae alguna gota hacia las cinco."
 }
