@@ -370,10 +370,10 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     else x = nube('#F1F4F7');
     return '<svg class="wi" viewBox="0 0 64 64" aria-hidden="true">'+x+'</svg>';
   }
-  function xhr(url, ok, ko){
+  function xhr(url, ok, ko, ms){
     try{
       // Una sola respuesta por petición (en un fallo por tiempo, Safari avisaba dos veces)
-      var hecho = false, x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = 30000;
+      var hecho = false, x = new XMLHttpRequest(); x.open('GET', url, true); x.timeout = ms || 30000;
       x.onreadystatechange = function(){ if(x.readyState!==4 || hecho) return; hecho = true; if(x.status>=200 && x.status<300) ok(x.responseText); else if(ko) ko(x.status); };
       x.ontimeout = function(){ if(hecho) return; hecho = true; if(ko) ko('timeout'); };
       x.send();
@@ -708,6 +708,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
     return out;
   }
 
+  var REINTENTO = null;
   function cargaCalendarios(){
     var cals = CFG.calendarios || [];
     if(!cals.length) { pinta(); return; }
@@ -722,13 +723,17 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
           var nu = unicos(nv); acc = acc.concat(nu); CALERR[c.url] = ''; CALN[c.url] = { ev:tot, vis:nu.length, rep:nv.length-nu.length };
         }catch(e){ CALERR[c.url] = 'No se pudo leer el calendario ('+e.message+')'; }
         fin();
-      }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); });
+      }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario' : st==='timeout' ? 'Google ha tardado demasiado en contestar; se muestran los eventos guardados y se vuelve a intentar en 2 minutos' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); }, 90000);
     });
     function fin(){
       if(--pend !== 0) return;
       // Si alguno falló, conservar sus eventos guardados
       var fallidos = cals.filter(function(c){ return CALERR[c.url]; }).map(function(c){ return c.nombre; });
-      if(fallidos.length) acc = acc.concat(EVENTOS.filter(function(e){ return fallidos.indexOf(e.cal)>=0; }));
+      if(fallidos.length){
+        acc = acc.concat(EVENTOS.filter(function(e){ return fallidos.indexOf(e.cal)>=0; }));
+        // Reintento al rato (una sola vez pendiente)
+        if(!REINTENTO) REINTENTO = setTimeout(function(){ REINTENTO = null; cargaCalendarios(); }, 120000);
+      }
       acc = unicos(acc);
       acc.sort(function(a,b){ return (a.todo===b.todo ? a.ini-b.ini : (a.todo?-1:1)); });
       EVENTOS = acc; CALT = new Date();
