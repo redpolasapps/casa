@@ -600,7 +600,10 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   /* ================== CALENDARIO ================== */
   var EVS = lget('panel_evs', null), CALERR = {}, CALN = {}, CALT = null;
   // Quita eventos repetidos (mismo calendario, título y horas)
-  function unicos(list){ var vis = {}; return list.filter(function(e){ var k = e.cal+'|'+e.titulo+'|'+(+e.ini)+'|'+(+e.fin); if(vis[k]) return false; vis[k] = 1; return true; }); }
+  // Quita repetidos: mismo título (sin fijarse en espacios ni mayúsculas) a la misma hora, aunque vengan de calendarios distintos
+  // o de un calendario que tenga copias (pasa cuando una app sincroniza mal y duplica los eventos).
+  function normT(t){ return String(t||'').toLowerCase().replace(/[\s\u00a0\u200b]+/g,' ').replace(/^\s+|\s+$/g,''); }
+  function unicos(list){ var vis = {}; return list.filter(function(e){ var k = normT(e.titulo)+'|'+Math.floor(+e.ini/60000)+'|'+Math.floor(+e.fin/60000)+'|'+(e.todo?1:0); if(vis[k]) return false; vis[k] = 1; return true; }); }
   function revive(list){ return unicos((list||[]).map(function(e){ return { cal:e.cal, color:e.color, titulo:e.titulo, lugar:e.lugar, nota:e.nota||'', url:e.url||'', todo:e.todo, ini:new Date(e.ini), fin:new Date(e.fin) }; })); }
   var EVENTOS = EVS ? revive(EVS.ev) : [];
 
