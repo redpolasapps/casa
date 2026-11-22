@@ -741,7 +741,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
           var nu = unicos(nv); acc = acc.concat(nu); CALERR[c.url] = ''; CALN[c.url] = { ev:tot, vis:nu.length, rep:nv.length-nu.length };
         }catch(e){ CALERR[c.url] = 'No se pudo leer el calendario ('+e.message+')'; }
         fin();
-      }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario' : st==='timeout' ? 'Google ha tardado demasiado en contestar; se muestran los eventos guardados y se vuelve a intentar en 2 minutos' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); }, 90000);
+      }, function(st){ CALERR[c.url] = st===0 ? 'Sin conexión con el intermediario (puede ser el wifi o que Google no contestó); se muestran los eventos guardados y se vuelve a intentar en 2 minutos' : (st==='timeout' || st===504) ? 'Google ha tardado demasiado en contestar; se muestran los eventos guardados y se vuelve a intentar en 2 minutos' : st===403 ? 'Ese enlace no es de Google, iCloud u Outlook' : st===502 ? 'Google/iCloud no devuelve el calendario: revisa que el enlace sea la dirección secreta iCal' : 'Error '+st; fin(); }, 90000);
     });
     function fin(){
       if(--pend !== 0) return;

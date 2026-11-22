@@ -30,9 +30,14 @@ export default {
     try { d = new URL(destino); } catch { return cors(new Response("URL no válida", { status: 400 })); }
     const ok = d.protocol === "https:" && HOSTS_PERMITIDOS.some((h) => d.hostname === h || d.hostname.endsWith("." + h));
     if (!ok) return cors(new Response("Solo se permiten calendarios de Google, iCloud u Outlook", { status: 403 }));
-    const r = await fetch(d.toString(), { headers: { "User-Agent": "panel-casa/1.0" }, cf: { cacheTtl: 300, cacheEverything: true } });
-    const texto = await r.text();
-    if (!r.ok || texto.indexOf("BEGIN:VCALENDAR") < 0) return cors(new Response("No es un calendario (" + r.status + ")", { status: 502 }));
-    return cors(new Response(texto, { status: 200, headers: { "Content-Type": "text/calendar; charset=utf-8" } }));
+    // Si Google o iCloud tardan o fallan, se contesta igualmente (con permiso CORS) para que el panel sepa qué pasa
+    try {
+      const r = await fetch(d.toString(), { headers: { "User-Agent": "panel-casa/1.0" }, cf: { cacheTtl: 300, cacheEverything: true }, signal: AbortSignal.timeout(25000) });
+      const texto = await r.text();
+      if (!r.ok || texto.indexOf("BEGIN:VCALENDAR") < 0) return cors(new Response("No es un calendario (" + r.status + ")", { status: 502 }));
+      return cors(new Response(texto, { status: 200, headers: { "Content-Type": "text/calendar; charset=utf-8" } }));
+    } catch (e) {
+      return cors(new Response("El calendario no ha contestado a tiempo", { status: 504 }));
+    }
   },
 };
