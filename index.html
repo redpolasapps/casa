@@ -32,6 +32,9 @@ button{border:0;background:none;color:inherit;cursor:pointer;padding:0}
 .afp{display:inline-block;background:#E9E4DE;color:#3B3632;border-radius:8px;padding:0 6px 0 4px;margin-right:6px;font-weight:800}
 .afp .ic{margin-right:2px;width:1em;height:1em}
 .noche .afp{background:#3A322C;color:#F3EAE0}
+.regla{display:-webkit-flex;display:flex;-webkit-align-items:center;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);font-size:17px}
+.regla b{-webkit-flex:1;flex:1}
+.rpunto{width:26px;height:26px;border-radius:13px;margin-right:12px;-webkit-flex:none;flex:none}
 /* Detalle de evento */
 .ev[data-ev],.se[data-ev]{cursor:pointer}
 .evn{font-size:13.5px;font-weight:800;color:var(--soft);margin-top:3px}
@@ -755,14 +758,14 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
   }
   function evId(e){ var i = EVENTOS.indexOf(e); return i < 0 ? '' : ' data-ev="'+i+'"'; }
   function evHTML(e, d){
-    return '<div class="ev"'+evId(e)+'><div class="bar" style="background:'+esc(e.color)+'"></div><div class="evb"><div class="evh">'+esc(horaEv(e,d))+' · '+esc(e.cal)+'</div>'+
+    return '<div class="ev"'+evId(e)+'><div class="bar" style="background:'+esc(col(e))+'"></div><div class="evb"><div class="evh">'+esc(horaEv(e,d))+' · '+esc(e.cal)+'</div>'+
       '<div class="evt">'+esc(e.titulo)+'</div>'+(e.lugar?'<div class="evl">'+ic('pin')+esc(e.lugar)+'</div>':'')+(e.nota?'<div class="evn">'+ic('nota')+'Ver notas</div>':'')+'</div></div>';
   }
   function enlaces(t){ return esc(t).replace(/(https?:\/\/[^\s<)]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>').replace(/\n/g,'<br>'); }
   function abrirEvento(e){
     var d = e.ini, f = cap(DIAS[d.getDay()])+', '+d.getDate()+' de '+MESES[d.getMonth()];
     var h = e.todo ? 'Todo el día' : hhmm(e.ini)+' – '+hhmm(e.fin);
-    var s = '<div class="mfondo" data-cerrarev="1"></div><div class="mcaja"><div class="mbar" style="background:'+esc(e.color)+'"></div>'+
+    var s = '<div class="mfondo" data-cerrarev="1"></div><div class="mcaja"><div class="mbar" style="background:'+esc(col(e))+'"></div>'+
       '<button class="mx" data-cerrarev="1" aria-label="Cerrar">×</button>'+
       '<div class="mcal">'+esc(e.cal)+'</div><h3>'+esc(e.titulo)+'</h3>'+
       '<div class="mfila">'+ic('calendario')+esc(f)+'</div><div class="mfila">'+ic('reloj')+esc(h)+'</div>'+
@@ -802,8 +805,8 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
         for(var i=0;i<7;i++){
           var dd = new Date(d.getFullYear(), d.getMonth(), d.getDate()+i), k = kdia(dd), ev = eventosDe(dd);
           s += '<div class="md'+(dd.getMonth()!==REF.getMonth()?' fuera':'')+(k===hoyk?' hoy':'')+(k===kdia(SEL)?' sel':'')+'" data-dsel="'+k+'"><div class="dn">'+dd.getDate()+'</div>'+
-            ev.slice(0,3).map(function(e){ return e.todo ? '<span class="chip" style="background:'+esc(e.color)+'">'+esc(e.titulo)+'</span><span class="chip mob" style="background:'+esc(e.color)+'"></span>'
-              : '<span class="chip d"><i style="background:'+esc(e.color)+'"></i>'+hhmm(e.ini)+' '+esc(e.titulo)+'</span><span class="chip mob" style="background:'+esc(e.color)+'"></span>'; }).join('')+
+            ev.slice(0,3).map(function(e){ return e.todo ? '<span class="chip" style="background:'+esc(col(e))+'">'+esc(e.titulo)+'</span><span class="chip mob" style="background:'+esc(col(e))+'"></span>'
+              : '<span class="chip d"><i style="background:'+esc(col(e))+'"></i>'+hhmm(e.ini)+' '+esc(e.titulo)+'</span><span class="chip mob" style="background:'+esc(col(e))+'"></span>'; }).join('')+
             (ev.length>3?'<span class="masn">+'+(ev.length-3)+' más</span>':'')+'</div>';
         }
         s += '</div>'; d = new Date(d.getFullYear(), d.getMonth(), d.getDate()+7);
@@ -817,7 +820,7 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       for(var j=0;j<7;j++){
         var dj = new Date(l.getFullYear(), l.getMonth(), l.getDate()+j), ej = eventosDe(dj);
         s += '<div class="sc'+(kdia(dj)===hoyk?' hoy':'')+'"><div class="sh"><b>'+DCORTO[dj.getDay()]+'</b><span>'+dj.getDate()+'</span></div>'+
-          (ej.length ? ej.map(function(e){ return '<div class="se"'+evId(e)+' style="background:'+esc(e.color)+'"><div class="h">'+esc(e.todo?'Todo el día':hhmm(e.ini))+'</div><div class="t">'+esc(e.titulo)+'</div></div>'; }).join('') : '<div class="vacio" style="padding:8px 0;font-size:13px">—</div>')+'</div>';
+          (ej.length ? ej.map(function(e){ return '<div class="se"'+evId(e)+' style="background:'+esc(col(e))+'"><div class="h">'+esc(e.todo?'Todo el día':hhmm(e.ini))+'</div><div class="t">'+esc(e.titulo)+'</div></div>'; }).join('') : '<div class="vacio" style="padding:8px 0;font-size:13px">—</div>')+'</div>';
       }
       s += '</div>';
     }
@@ -828,6 +831,13 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
 
   /* ================== AJUSTES ================== */
   var NUEVO = { color: PALETA[0] };
+  // Colores especiales: si el título contiene la palabra, el evento sale de ese color (se guarda solo en este aparato)
+  var NREG = { color: PALETA[4] };
+  function col(e){
+    var rs = CFG.reglas || [], t = normT(e.titulo);
+    for(var i=0;i<rs.length;i++){ var w = normT(rs[i].palabra); if(w && t.indexOf(w) >= 0) return rs[i].color; }
+    return e.color;
+  }
   function abrirAjustes(){
     var s = '<div class="ovb"><button class="bbig" data-cerrar="ovAjustes">‹ Panel</button><h2>'+ic('ajustes')+'Ajustes</h2><span style="width:110px"></span></div><div class="ovc">';
     s += '<div class="form"><h3>'+ic('calendario')+'Tus calendarios</h3>'+
@@ -856,6 +866,12 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       '<div class="paso2"><div class="pt2">3 · Pulsa añadir</div><button class="boton" data-addcal="1">'+ic('mas')+'Añadir calendario</button>'+
       '<div class="ayuda" style="margin-top:8px">En unos segundos verás arriba <b>"Leído"</b> en verde y sus eventos aparecerán en el panel, con su color. Se actualizan solos cada 15 minutos.</div></div></div></div>';
     s += ''+
+      '<div class="form"><h3>'+ic('destello')+'Colores especiales</h3>'+
+      '<div class="ayuda">Los eventos cuyo título contenga una palabra salen del color que elijas, sea del calendario que sea. Por ejemplo: <b>Biel</b> en verde, <b>médico</b> en rojo o <b>cumple</b> en rosa. No importan las mayúsculas. Si un evento encaja con varias, manda la primera de la lista. Se guardan solo en este aparato.</div>'+
+      ((CFG.reglas||[]).length ? (CFG.reglas||[]).map(function(r,i){ return '<div class="regla"><span class="rpunto" style="background:'+esc(r.color)+'"></span><b>'+esc(r.palabra)+'</b><button class="del" data-delregla="'+i+'">Quitar</button></div>'; }).join('') : '<div class="ayuda" style="margin-top:10px"><i>Todavía no hay ninguna regla.</i></div>')+
+      '<label>Palabra del título</label><input id="rPal" placeholder="Ej.: Biel, cole, médico, cumple" value="'+esc(NREG.palabra||'')+'">'+
+      '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NREG.color===p?'on':'')+'" data-rcolor="'+p+'"></button>'; }).join('')+'</div>'+
+      '<button class="boton" data-addregla="1">'+ic('mas')+'Añadir regla</button></div>'+
       '<div class="form"><h3>'+ic('luna')+'Modo noche</h3><div class="ayuda">Por la noche el panel se oscurece para que moleste menos. En automático, cambia al atardecer y vuelve a la claridad al amanecer.</div>'+
       '<div class="seg" style="margin-top:10px">'+[['auto','Automático'],['claro','Siempre claro'],['oscuro','Siempre oscuro']].map(function(o){ return '<button class="'+((CFG.modo||'auto')===o[0]?'on':'')+'" data-modo="'+o[0]+'">'+o[1]+'</button>'; }).join('')+'</div></div></div>';
     $('ovAjustes').innerHTML = s; $('ovAjustes').className = 'ov on';
@@ -910,12 +926,20 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
           NUEVO = { color: PALETA[CFG.calendarios.length % PALETA.length] }; abrirAjustes(); cargaCalendarios(); return;
         }
         if((a = t.getAttribute('data-delcal')) !== null){ CFG.calendarios.splice(+a,1); guardaCfg(); abrirAjustes(); cargaCalendarios(); return; }
+        if((a = t.getAttribute('data-rcolor'))){ NREG.palabra = $('rPal').value; NREG.color = a; abrirAjustes(); return; }
+        if(t.getAttribute('data-addregla')){
+          var w = $('rPal').value.replace(/^\s+|\s+$/g,'');
+          if(!w){ alertaForm('Escribe la palabra que tiene que llevar el título', $('rPal')); return; }
+          CFG.reglas = CFG.reglas || []; CFG.reglas.push({ palabra:w, color:NREG.color }); guardaCfg();
+          NREG = { color: NREG.color }; abrirAjustes(); pinta(); return;
+        }
+        if((a = t.getAttribute('data-delregla')) !== null){ CFG.reglas.splice(+a,1); guardaCfg(); abrirAjustes(); pinta(); return; }
         if((a = t.getAttribute('data-modo'))){ CFG.modo = a; guardaCfg(); pinta(); abrirAjustes(); return; }
       }
       t = t.parentNode;
     }
   });
-  function alertaForm(m){ var b = document.createElement('div'); b.className='estado'; b.style.color='#B23A3A'; b.className='estado mal'; b.innerHTML=ic('alerta')+esc(m); var f=$('ovAjustes').querySelector('.form'); f.appendChild(b); }
+  function alertaForm(m, el){ var b = document.createElement('div'); b.className='estado'; b.style.color='#B23A3A'; b.className='estado mal'; b.innerHTML=ic('alerta')+esc(m); var f=(el && el.parentNode) || $('ovAjustes').querySelector('.form'); f.appendChild(b); }
 
   // Reloj y recargas
   var ultDia = kdia(new Date());
