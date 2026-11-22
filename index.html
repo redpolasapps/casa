@@ -882,9 +882,9 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
       '<div class="ayuda" style="margin-top:8px">En unos segundos verás arriba <b>"Leído"</b> en verde y sus eventos aparecerán en el panel, con su color. Se actualizan solos cada 15 minutos.</div></div></div></div>';
     s += ''+
       '<div class="form"><h3>'+ic('destello')+'Colores especiales</h3>'+
-      '<div class="ayuda">Los eventos cuyo título contenga una palabra salen del color que elijas, sea del calendario que sea. Por ejemplo: <b>Biel</b> en verde, <b>médico</b> en rojo o <b>cumple</b> en rosa. No importan las mayúsculas. Si un evento encaja con varias, manda la primera de la lista. Se guardan solo en este aparato.</div>'+
+      '<div class="ayuda">Los eventos cuyo título contenga una palabra salen del color que elijas, sea del calendario que sea. Por ejemplo: <b>cole</b> en verde, <b>médico</b> en rojo o <b>cumple</b> en rosa. No importan las mayúsculas. Si un evento encaja con varias, manda la primera de la lista. Se guardan solo en este aparato.</div>'+
       ((CFG.reglas||[]).length ? (CFG.reglas||[]).map(function(r,i){ return '<div class="regla"><span class="rpunto" style="background:'+esc(r.color)+'"></span><b>'+esc(r.palabra)+'</b><button class="del" data-delregla="'+i+'">Quitar</button></div>'; }).join('') : '<div class="ayuda" style="margin-top:10px"><i>Todavía no hay ninguna regla.</i></div>')+
-      '<label>Palabra del título</label><input id="rPal" placeholder="Ej.: Biel, cole, médico, cumple" value="'+esc(NREG.palabra||'')+'">'+
+      '<label>Palabra del título</label><input id="rPal" placeholder="Ej.: cole, médico, cumple, fútbol" value="'+esc(NREG.palabra||'')+'">'+
       '<label>Color</label><div class="colores">'+PALETA.map(function(p){ return '<button style="background:'+p+'" class="'+(NREG.color===p?'on':'')+'" data-rcolor="'+p+'"></button>'; }).join('')+'</div>'+
       '<button class="boton" data-addregla="1">'+ic('mas')+'Añadir regla</button></div>'+
       '<div class="form"><h3>'+ic('luna')+'Modo noche</h3><div class="ayuda">Por la noche el panel se oscurece para que moleste menos. En automático, cambia al atardecer y vuelve a la claridad al amanecer.</div>'+
