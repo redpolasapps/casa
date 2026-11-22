@@ -268,6 +268,21 @@ body.noche{--bg:#191512;--ink:#F3EAE0;--soft:#BDB1A4;--line:#352D27;--crema:#332
 <script src="config.js"></script>
 <script>
 (function(){
+  var OCUPADO = function(){ return !!document.querySelector('.ov.on, .modal.on') || document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName); };
+  // Si hay una versión nueva publicada, recarga sola (cada 20 min; no si hay algo abierto)
+  (function(){
+    var yo = document.currentScript ? document.currentScript.text : '';
+    if(!yo) return;
+    function mira(){
+      try{
+        var r = new XMLHttpRequest(); r.open('GET', location.pathname + '?v=' + Date.now(), true);
+        r.onload = function(){ if(r.status === 200 && r.responseText.length > 1000 && r.responseText.indexOf(yo) < 0 && !OCUPADO()) location.reload(); };
+        r.send();
+      }catch(e){}
+    }
+    setInterval(mira, 20*60000);
+  })();
+
   /* ================== Configuración ================== */
   // Todo lo propio de cada casa está en config.js
   var C = window.CONFIG || {};
