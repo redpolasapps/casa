@@ -1,15 +1,15 @@
 {
- "fecha": "2026-11-21",
- "tanda": "tarde",
- "sinCole": true,
- "generado": "2026-11-21T16:47:15.949Z",
- "resumen": "Tarde agradable con temperaturas suaves en torno a los 17°C, cielos nubosos, viento moderado y cierta probabilidad de lluvia a media tarde.",
+ "fecha": "2026-11-25",
+ "tanda": "manana",
+ "sinCole": false,
+ "generado": "2026-11-25T05:25:20.954Z",
+ "resumen": "Será un día fresco con máximas de 13°C, lluvias concentradas a mediodía y rachas de viento notables por la tarde.",
  "ropa": [
-  "Chaqueta ligera o chubasquero",
   "Camiseta de manga larga",
+  "Sudadera",
   "Pantalón largo",
-  "Zapatillas cerradas",
-  "Paraguas"
+  "Abrigo cortavientos con capucha",
+  "Zapatillas impermeables"
  ],
- "consejo": "Aprovechad para salir al parque al principio de la tarde, pero llevad un chubasquero o paraguas por si cae alguna gota hacia las cinco."
+ "consejo": "La sensación térmica será fresca todo el día y soplará viento fuerte a la salida del colegio, por lo que una chaqueta cortavientos con capucha es fundamental."
 }
