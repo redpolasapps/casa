@@ -1,15 +1,15 @@
 {
  "fecha": "2026-11-25",
- "tanda": "manana",
+ "tanda": "tarde",
  "sinCole": false,
- "generado": "2026-11-25T05:25:20.954Z",
- "resumen": "Será un día fresco con máximas de 13°C, lluvias concentradas a mediodía y rachas de viento notables por la tarde.",
+ "generado": "2026-11-25T16:00:55.514Z",
+ "resumen": "La tarde estará fresca y sin lluvia en Barcelona, con cielos despejados y viento moderado que aumentará la sensación de frío a medida que anochezca.",
  "ropa": [
+  "Chaqueta cortavientos",
+  "Sudadera con capucha",
   "Camiseta de manga larga",
-  "Sudadera",
   "Pantalón largo",
-  "Abrigo cortavientos con capucha",
-  "Zapatillas impermeables"
+  "Zapatillas cerradas"
  ],
- "consejo": "La sensación térmica será fresca todo el día y soplará viento fuerte a la salida del colegio, por lo que una chaqueta cortavientos con capucha es fundamental."
+ "consejo": "Al ir a buscarle a las 17:00 notaréis que el viento hace descender la sensación térmica, así que ponle un buen cortavientos para estar en el parque."
 }
